@@ -1,0 +1,90 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Machine>WIN8</Machine>
+    <WindowsUser>David</WindowsUser>
+    <SolutionConfiguration>Debug|AnyCPU</SolutionConfiguration>
+    <PackageArchitecture>neutral</PackageArchitecture>
+    <RegisteredManifestChecksum>45B443E8D176F32E379486728D9C8256A186AB2D511248C1359B15342FE675BD</RegisteredManifestChecksum>
+    <RegisteredPackageMoniker>34717a2b-8fc5-4775-ad22-771d3808ef95_1.0.0.0_neutral__ywwvhtjmx9rt8</RegisteredPackageMoniker>
+    <RegisteredUserModeAppID>34717a2b-8fc5-4775-ad22-771d3808ef95_ywwvhtjmx9rt8!App</RegisteredUserModeAppID>
+    <RegisteredPackageID>34717a2b-8fc5-4775-ad22-771d3808ef95</RegisteredPackageID>
+    <RegisteredPackagePublisher>CN=David</RegisteredPackagePublisher>
+    <RegisteredVersion>1.0.0.0</RegisteredVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <AppXManifest Include="c:\users\david\documents\visual studio 2012\Projects\gradeBookSolution\gradeBook\bin\Debug\AppxManifest.xml">
+      <PackagePath>AppxManifest.xml</PackagePath>
+      <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
+      <Modified>2013-12-12T15:20:34.164</Modified>
+    </AppXManifest>
+  </ItemGroup>
+  <ItemGroup>
+    <AppxPackagedFile Include="c:\users\david\documents\visual studio 2012\Projects\gradeBookSolution\gradeBook\bin\Debug\gradeBook.exe">
+      <PackagePath>gradeBook.exe</PackagePath>
+      <Modified>2013-12-19T16:16:28.725</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="c:\users\david\documents\visual studio 2012\Projects\gradeBookSolution\gradeBook\bin\Debug\gradeBook.pdb">
+      <PackagePath>gradeBook.pdb</PackagePath>
+      <Modified>2013-12-19T16:16:28.625</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="c:\users\david\documents\visual studio 2012\Projects\gradeBookSolution\gradeBook\Assets\Logo.png">
+      <PackagePath>Assets\Logo.png</PackagePath>
+      <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
+      <Modified>2012-06-06T10:18:14.000</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="c:\users\david\documents\visual studio 2012\Projects\gradeBookSolution\gradeBook\Assets\SmallLogo.png">
+      <PackagePath>Assets\SmallLogo.png</PackagePath>
+      <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
+      <Modified>2012-06-06T10:18:14.000</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="c:\users\david\documents\visual studio 2012\Projects\gradeBookSolution\gradeBook\Assets\SplashScreen.png">
+      <PackagePath>Assets\SplashScreen.png</PackagePath>
+      <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
+      <Modified>2012-06-06T10:18:14.000</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="c:\users\david\documents\visual studio 2012\Projects\gradeBookSolution\gradeBook\Assets\StoreLogo.png">
+      <PackagePath>Assets\StoreLogo.png</PackagePath>
+      <ReRegisterAppIfChanged>true</ReRegisterAppIfChanged>
+      <Modified>2012-06-06T10:18:14.000</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="c:\users\david\documents\visual studio 2012\Projects\gradeBookSolution\gradeBook\Assets\LightGray.png">
+      <PackagePath>Assets\LightGray.png</PackagePath>
+      <Modified>2012-06-06T10:18:14.000</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="c:\users\david\documents\visual studio 2012\Projects\gradeBookSolution\gradeBook\Assets\MediumGray.png">
+      <PackagePath>Assets\MediumGray.png</PackagePath>
+      <Modified>2012-06-06T10:18:14.000</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="c:\users\david\documents\visual studio 2012\Projects\gradeBookSolution\gradeBook\Assets\DarkGray.png">
+      <PackagePath>Assets\DarkGray.png</PackagePath>
+      <Modified>2012-06-06T10:18:14.000</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="c:\users\david\documents\visual studio 2012\Projects\gradeBookSolution\gradeBook\bin\Debug\App.xaml">
+      <PackagePath>App.xaml</PackagePath>
+      <Modified>2013-12-12T14:50:43.639</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="c:\users\david\documents\visual studio 2012\Projects\gradeBookSolution\gradeBook\bin\Debug\Common\StandardStyles.xaml">
+      <PackagePath>Common\StandardStyles.xaml</PackagePath>
+      <Modified>2012-07-27T04:25:16.000</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="c:\users\david\documents\visual studio 2012\Projects\gradeBookSolution\gradeBook\bin\Debug\GroupedItemsPage.xaml">
+      <PackagePath>GroupedItemsPage.xaml</PackagePath>
+      <Modified>2013-12-12T14:50:43.767</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="c:\users\david\documents\visual studio 2012\Projects\gradeBookSolution\gradeBook\bin\Debug\GroupDetailPage.xaml">
+      <PackagePath>GroupDetailPage.xaml</PackagePath>
+      <Modified>2013-12-12T16:21:04.827</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="c:\users\david\documents\visual studio 2012\Projects\gradeBookSolution\gradeBook\bin\Debug\ItemDetailPage.xaml">
+      <PackagePath>ItemDetailPage.xaml</PackagePath>
+      <Modified>2013-12-12T16:14:25.081</Modified>
+    </AppxPackagedFile>
+    <AppxPackagedFile Include="c:\users\david\documents\visual studio 2012\Projects\gradeBookSolution\gradeBook\bin\Debug\resources.pri">
+      <PackagePath>resources.pri</PackagePath>
+      <Modified>2013-12-12T14:50:56.913</Modified>
+    </AppxPackagedFile>
+  </ItemGroup>
+  <ItemGroup>
+  </ItemGroup>
+</Project>
