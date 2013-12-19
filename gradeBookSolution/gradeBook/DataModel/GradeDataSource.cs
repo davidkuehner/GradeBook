@@ -30,12 +30,13 @@ namespace gradeBook.Data
     {
         private static Uri _baseUri = new Uri("ms-appx:///");
 
-        public GradeDataCommon(String uniqueId, String title, Double ponderation, GradeDataGroup group)
+        public GradeDataCommon(String uniqueId, String title, Double ponderation, GradeDataGroup group, String description)
         {
             this._uniqueId = uniqueId;
             this._title = title;
             this._ponderation = ponderation;
             this._group = group;
+            this._description = description;
         }
 
         private string _uniqueId = string.Empty;
@@ -66,9 +67,21 @@ namespace gradeBook.Data
             set { this.SetProperty(ref this._group, value); }
         }
 
+        private string _description = string.Empty;
+        public string Description
+        {
+            get { return this._description; }
+            set { this.SetProperty(ref this._description, value); }
+        }
+
         public override string ToString()
         {
             return this.Title;
+        }
+
+        public double Average
+        {
+            get { return 0.0; }
         }
     }
 
@@ -77,8 +90,8 @@ namespace gradeBook.Data
     /// </summary>
     public class GradeDataItem : GradeDataCommon
     {
-        public GradeDataItem(String uniqueId, String title, Double ponderation, GradeDataGroup group, Double grade)
-            : base(uniqueId, title, ponderation, group)
+        public GradeDataItem(String uniqueId, String title, Double ponderation, GradeDataGroup group, String description, Double grade)
+            : base(uniqueId, title, ponderation, group, description)
         {
             this._grade = grade;
         }
@@ -88,6 +101,11 @@ namespace gradeBook.Data
             get { return this._grade; }
             set { this.SetProperty(ref this._grade, value); }
         }
+
+        public new double Average
+        {
+            get { return Ponderation * Grade; }
+        }
         
     }
 
@@ -96,8 +114,8 @@ namespace gradeBook.Data
     /// </summary>
     public class GradeDataGroup : GradeDataCommon
     {
-        public GradeDataGroup(String uniqueId, String title, Double ponderation, GradeDataGroup group)
-            : base(uniqueId, title, ponderation, group)
+        public GradeDataGroup(String uniqueId, String title, Double ponderation, GradeDataGroup group, String description)
+            : base(uniqueId, title, ponderation, group, description)
         {
             Items.CollectionChanged += ItemsCollectionChanged;
         }
@@ -177,6 +195,21 @@ namespace gradeBook.Data
         {
             get {return this._topItem; }
         }
+
+        public new double Average
+        {
+            get
+            {
+                double sumPonderations = 0.0;
+                double sumGrades = 0.0;
+                foreach (var item in _items)
+                {
+                    sumPonderations += item.Ponderation;
+                    sumGrades += item.Ponderation * item.Average;
+                }
+                return sumGrades / sumPonderations;
+            }
+        }
     }
 
     /// <summary>
@@ -189,88 +222,235 @@ namespace gradeBook.Data
     {
         private static GradeDataSource _GradeDataSource = new GradeDataSource();
 
-        // TODO david -> change type of RootGroup attribute to group
-        private ObservableCollection<GradeDataGroup> _rootGroup = new ObservableCollection<GradeDataGroup>();
-        public ObservableCollection<GradeDataGroup> RootGroup
+        private GradeDataGroup _rootGroup = new GradeDataGroup("RootGroup", "Grade Book", 1.0, null, "You can orderd your notes by group");
+        public GradeDataGroup RootGroup
         {
             get { return this._rootGroup; }
         }
 
-        /*public static IEnumerable<GradeDataGroup> GetGroups(string uniqueId)
-        {
-            if (!uniqueId.Equals("RootGroup")) throw new ArgumentException("Only 'RootGroup' is supported as a collection of groups");
-            
-            return _GradeDataSource.RootGroup;
-        }*/
-
-        public IEnumerable<GradeDataGroup> GetRootGroup()
-        {
-            return _GradeDataSource.RootGroup;
-        }
-
-        /*public static GradeDataGroup GetGroup(string uniqueId)
-        {
-            // Une simple recherche linéaire est acceptable pour les petits groupes de données
-            var matches = _GradeDataSource.RootGroup.Where((group) => group.UniqueId.Equals(uniqueId));
-            if (matches.Count() == 1) return matches.First();
-            return null;
-        }*/
-
-        /*public static GradeDataCommon GetItem(string uniqueId)
-        {
-            // Une simple recherche linéaire est acceptable pour les petits groupes de données
-            var matches = _GradeDataSource.RootGroup.SelectMany(group => group.Items).Where((item) => item.UniqueId.Equals(uniqueId));
-            if (matches.Count() == 1) return matches.First();
-            return null;
-        }*/
-
         public GradeDataSource()
         {
-            /// The tree root
-            var rootGroup = new GradeDataGroup("RootGroup",
-                    "RootGroup",
-                    1.0, null);
-            this.RootGroup.Add(rootGroup);
-
-
             var group1 = new GradeDataGroup("HE-ARC-1",
                     "HE-ARC-1 G",
-                    1.0, null);
+                    1.0, null, "The funniest science year");
                     
             group1.Items.Add(new GradeDataItem("P1",
                     "Projet 1 I",
                     1.0,
                     group1,
+                    "Look at the start",
                     6.0));
 
             group1.Items.Add(new GradeDataItem("Sciences-A",
                     "Sciences-1 I",
                     1.0,
                     group1,
+                    "Enjoy vectors",
                     6.0));
 
             var group11 = new GradeDataGroup("Programmation",
                     "Programmation G",
                     1.0,
-                    group1);
+                    group1,
+                    "Hello world");
             group11.Items.Add(new GradeDataItem("Assembleur",
                     "Assembleur I",
                     1.0,
                     group1,
+                    "LDAA ADDA STAA",
                     6.0));
             group1.Items.Add(group11);
 
-            rootGroup.Items.Add(group1);
+            this._rootGroup.Items.Add(group1);
 
             var group2 = new GradeDataGroup("HE-ARC-2",
                     "HE-ARC-2 G",
-                    1.0, null);
+                    1.0, 
+                    null,
+                    "Try project from scratch");
             group2.Items.Add(new GradeDataItem("Projet-2",
                     "Projet-2 I",
                     1.0,
                     group2,
+                    "Youhoooo, shiny!",
                     6.0));
-            rootGroup.Items.Add(group2);
+            this._rootGroup.Items.Add(group2);
+
+            var imageNum = new GradeDataGroup("imagerieNumerique",
+                    "Imagerie numérique",
+                    1.0,
+                    null,
+                    @"Les objectifs d’apprentissage de ce module sont classés selon les trois degrés croissants de difficulté:
+(M) Mémorisation, (A) Application et compréhension, (R) Résolution de problèmes (analyse, synthèse, évaluation).
+A l’issue du module, l'étudiant doit être capable de :
+
+- Reproduire les exercices faits en classe. (M)
+- Appliquer ce qui a été appris en classe dans des situations nouvelles. (A)
+- Réaliser, tester et programmer des applications selon un cahier des charges. (R)
+
+Evaluation des apprentissages
+
+-	Evaluations des différentes Unités d’Enseignement (UE)
+-	Un examen oral de 30 min sur « Infographie» et «Traitement d’image » à la fin du semestre de printemps 
+
+");
+            var trimg = new GradeDataGroup("traitementImage",
+                    "Traitement d'image",
+                    1.0,
+                    imageNum,
+                    @"Identifiant	3252.2
+
+
+Méthode d’enseignement
+
+	Cours et travaux pratiques en laboratoire
+    
+    
+Objectifs spécifiques
+
+	A l'issue du module, l'étudiant doit être capable de :
+-	Décrire les caractéristiques des images et des principaux algorithmes de traitements y relatifs. (M) 
+-	Concevoir une application de traitement d’image. (R)
+-	Implémenter et/ou utiliser les principaux algorithmes de traitement de l'image. (R)
+
+
+Modalités d’évaluation
+
+-	Deux contrôles principaux (CP) écrits, annoncés et obligatoires
+-	Un projet en groupe ou individuel à rendre en fin d'année
+-	Un examen oral à la fin du semestre de printemps
+
+
+Description du contenu (mots-clés)
+
+-	Caractéristiques des images
+-	Chaîne d'acquisition d'images
+-	Bruit et Filtrage
+-	Convolution
+-	Comparaison d’images
+-	Morphologique mathématique
+-	Détection de contours
+-	Segmentation 
+-	Caractérisation
+-	Transformée de Fourrier
+
+
+Supports de cours	Au choix de l’enseignant
+
+Outils utilisés	Si des outils (informatiques, par exemple) sont utilisés, ils sont à préciser par le responsable de l’unité d’enseignement au début du cours
+
+
+Particularité d’organisation	
+
+Environ 2h30 de travail personnel par semaine
+");
+            imageNum.Items.Add(trimg);
+            var infogra = new GradeDataGroup("infogra",
+                    "Infographie",
+                    1.0,
+                    imageNum,
+                    "Un cours bidon");
+            imageNum.Items.Add(infogra);
+
+            infogra.Items.Add(new GradeDataItem("qq1",
+                    "Quick Quiz 1",
+                    1.0,
+                    trimg,
+                    "7 minutes...",
+                    6.0));
+            infogra.Items.Add(new GradeDataItem("qq2",
+                    "Quick Quiz 2",
+                    1.0,
+                    trimg,
+                    "7 minutes...",
+                    6.0));
+            infogra.Items.Add(new GradeDataItem("qq3",
+                    "Quick Quiz 3",
+                    1.0,
+                    trimg,
+                    "7 minutes...",
+                    6.0));
+            infogra.Items.Add(new GradeDataItem("qq4",
+                    "Quick Quiz 4",
+                    1.0,
+                    trimg,
+                    "7 minutes...",
+                    6.0));
+            infogra.Items.Add(new GradeDataItem("qq5",
+                    "Quick Quiz 5",
+                    1.0,
+                    trimg,
+                    "7 minutes...",
+                    6.0));
+            infogra.Items.Add(new GradeDataItem("qq6",
+                    "Quick Quiz 6",
+                    1.0,
+                    trimg,
+                    "7 minutes...",
+                    6.0));
+            infogra.Items.Add(new GradeDataItem("qq7",
+                    "Quick Quiz 7",
+                    1.0,
+                    trimg,
+                    "7 minutes...",
+                    6.0));
+            infogra.Items.Add(new GradeDataItem("qq8",
+                    "Quick Quiz 8",
+                    1.0,
+                    trimg,
+                    "7 minutes...",
+                    6.0));
+            infogra.Items.Add(new GradeDataItem("qq9",
+                    "Quick Quiz 9",
+                    1.0,
+                    trimg,
+                    "7 minutes...",
+                    6.0));
+            infogra.Items.Add(new GradeDataItem("qq10",
+                    "Quick Quiz 10",
+                    1.0,
+                    trimg,
+                    "7 minutes...",
+                    6.0));
+            infogra.Items.Add(new GradeDataItem("qq11",
+                    "Quick Quiz 11",
+                    1.0,
+                    trimg,
+                    "7 minutes...",
+                    6.0));
+            infogra.Items.Add(new GradeDataItem("qq12",
+                    "Quick Quiz 12",
+                    1.0,
+                    trimg,
+                    "7 minutes...",
+                    6.0));
+            infogra.Items.Add(new GradeDataItem("qq13",
+                    "Quick Quiz 13",
+                    1.0,
+                    trimg,
+                    "7 minutes...",
+                    6.0));
+            infogra.Items.Add(new GradeDataItem("qq14",
+                    "Quick Quiz 14",
+                    1.0,
+                    trimg,
+                    "7 minutes...",
+                    6.0));
+            trimg.Items.Add(new GradeDataItem("test1",
+                    "Test 1",
+                    1.0,
+                    trimg,
+                    "Hae duae provinciae bello quondam piratico catervis mixtae praedonum a Servilio pro consule missae sub iugum factae sunt vectigales. et hae quidem regiones velut in prominenti terrarum lingua positae ob orbe eoo monte Amano disparantur.",
+                    6.0));
+
+            trimg.Items.Add(new GradeDataItem("projet",
+                    "Projet",
+                    1.0,
+                    trimg,
+                    "Hae duae provinciae bello quondam piratico catervis mixtae praedonum a Servilio pro consule missae sub iugum factae sunt vectigales. et hae quidem regiones velut in prominenti terrarum lingua positae ob orbe eoo monte Amano disparantur.",
+                    6.0));
+
+            this._rootGroup.Items.Add(imageNum);
         }
     }
 }

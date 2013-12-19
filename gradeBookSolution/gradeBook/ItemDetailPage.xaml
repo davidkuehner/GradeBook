@@ -69,10 +69,13 @@
                                 <RichTextBlock x:Name="richTextBlock" Width="560" Style="{StaticResource ItemRichTextStyle}" IsTextSelectionEnabled="False">
                                     <Paragraph>
                                         <Run FontSize="26.667" FontWeight="Light" Text="{Binding Title}"/>
-                                        
                                         <LineBreak/>
                                         <LineBreak/>
-                                        
+                                        <Run FontSize="26.667" FontWeight="Medium" Text="{Binding Average}"/>
+                                        <LineBreak/>
+                                    </Paragraph>
+                                    <Paragraph>
+                                        <Run FontWeight="SemiLight" Text="{Binding Description}"/>
                                     </Paragraph>
 
                                 </RichTextBlock>
