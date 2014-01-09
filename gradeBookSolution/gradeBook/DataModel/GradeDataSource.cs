@@ -11,6 +11,8 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Media.Imaging;
 using System.Collections.Specialized;
+using SQLite;
+using System.Diagnostics;
 
 // Le modèle de données défini par ce fichier sert d'exemple représentatif d'un modèle fortement typé
 // prenant en charge les notifications lorsque les membres sont ajoutés, supprimés ou modifiés. Les noms
@@ -21,6 +23,22 @@ using System.Collections.Specialized;
 
 namespace gradeBook.Data
 {
+
+    public class Person
+    {
+        [PrimaryKey, AutoIncrement]
+        public int Id { get; set; }
+
+        [MaxLength(30)]
+        public string Name { get; set; }
+
+        [MaxLength(30)]
+        public string Surname { get; set; }
+
+        public int Grade { get; set; }
+
+    }
+
     /// <summary>
     /// Classe de base pour <see cref="GradeDataItem"/> et <see cref="GradeDataGroup"/> qui
     /// définit les propriétés communes au deux.
@@ -39,7 +57,11 @@ namespace gradeBook.Data
             this._description = description;
         }
 
+        [PrimaryKey, AutoIncrement]
+        public int Id { get; set; }
+
         private string _uniqueId = string.Empty;
+        
         public string UniqueId
         {
             get { return this._uniqueId; }
@@ -47,6 +69,7 @@ namespace gradeBook.Data
         }
 
         private string _title = string.Empty;
+        [MaxLength(30)]
         public string Title
         {
             get { return this._title; }
@@ -220,6 +243,41 @@ namespace gradeBook.Data
     /// </summary>
     public sealed class GradeDataSource
     {
+
+        // Database creation
+        private async void CreateDatabase()
+        {
+            SQLiteAsyncConnection conn = new SQLiteAsyncConnection("people");
+            await conn.CreateTableAsync<Person>();
+        }
+
+        private async void CreatePersonTest()
+        {
+            SQLiteAsyncConnection conn = new SQLiteAsyncConnection("people");
+
+            Person person = new Person
+            {
+                Name = "Matteo",
+                Surname = "asdéflkjasdéfkljasdfasdfasdasdf",
+                Grade = 256
+            };
+
+            await conn.InsertAsync(person);
+        }
+
+        private async void DisplayPersonTest()
+        {
+            SQLiteAsyncConnection conn = new SQLiteAsyncConnection("people");
+
+            var query = conn.Table<Person>().Where(x => x.Name == "Matteo");
+            var result = await query.ToListAsync();
+            foreach (var item in result)
+            {
+                Debug.WriteLine(string.Format("{0}: {1} {2} {3}", item.Id, item.Name, item.Surname, item.Grade));
+            }
+        }
+
+
         private static GradeDataSource _GradeDataSource = new GradeDataSource();
 
         private GradeDataGroup _rootGroup = new GradeDataGroup("RootGroup", "Grade Book", 1.0, null, "You can orderd your notes by group");
@@ -230,6 +288,11 @@ namespace gradeBook.Data
 
         public GradeDataSource()
         {
+            //CreateDatabase();
+            //CreatePersonTest();
+            //DisplayPersonTest();
+
+
             var group1 = new GradeDataGroup("HE-ARC-1",
                     "HE-ARC-1 G",
                     1.0, null, "The funniest science year");
