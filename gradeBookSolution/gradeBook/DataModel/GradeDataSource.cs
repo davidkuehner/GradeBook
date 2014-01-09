@@ -37,6 +37,39 @@ namespace gradeBook.Data
 
         public int Grade { get; set; }
 
+        private Pillow _sleepBuddy = null;
+        [Ignore]
+        public Pillow SleepBuddy { 
+            
+            get { return this._sleepBuddy; }
+            set {
+                this.SleepBuddyId = value.Id;
+                this._sleepBuddy = value; 
+                }
+        }
+
+        public int SleepBuddyId { get; set; }
+
+        public override string ToString()
+        {
+            return base.ToString() + string.Format(" [ Name = {0} Surname = {1} Grade = {2} SleepBuddy = {3} ]", Name, Surname, Grade, SleepBuddy.ToString());
+        }
+
+    }
+
+    public class Pillow
+    {
+        [PrimaryKey, AutoIncrement]
+        public int Id { get; set; }
+
+        public string Color { get; set; }
+
+        public int Weight { get; set; }
+
+        public override string ToString()
+        {
+            return base.ToString() + string.Format(" [ Id = {0} Color = {1} Weight = {2} ]", Id, Color, Weight);
+        }
     }
 
     /// <summary>
@@ -245,36 +278,58 @@ namespace gradeBook.Data
     {
 
         // Database creation
-        private async void CreateDatabase()
+        private async void createDatabase()
         {
-            SQLiteAsyncConnection conn = new SQLiteAsyncConnection("people");
+            SQLiteAsyncConnection conn = new SQLiteAsyncConnection("mybase");
+            await conn.CreateTableAsync<Pillow>();
             await conn.CreateTableAsync<Person>();
+            
         }
 
-        private async void CreatePersonTest()
+        private async void createPersonTest()
         {
-            SQLiteAsyncConnection conn = new SQLiteAsyncConnection("people");
+            SQLiteAsyncConnection conn = new SQLiteAsyncConnection("mybase");
+
+            Pillow pil = new Pillow
+            {
+                Color = "blue",
+                Weight = 12
+            };
 
             Person person = new Person
             {
-                Name = "Matteo",
-                Surname = "asdéflkjasdéfkljasdfasdfasdasdf",
-                Grade = 256
+                Name = "David",
+                Surname = "asdfasdfasdasdfasdfasdfasdf",
+                Grade = 444,
+                SleepBuddy = pil
             };
 
+            await conn.InsertAsync(pil);
             await conn.InsertAsync(person);
         }
 
-        private async void DisplayPersonTest()
+        private async void displayPersonTest()
         {
-            SQLiteAsyncConnection conn = new SQLiteAsyncConnection("people");
+            SQLiteAsyncConnection conn = new SQLiteAsyncConnection("mybase");
 
-            var query = conn.Table<Person>().Where(x => x.Name == "Matteo");
+            var query = conn.Table<Person>().Where(x => x.Name == "David");
             var result = await query.ToListAsync();
+
+
             foreach (var item in result)
             {
-                Debug.WriteLine(string.Format("{0}: {1} {2} {3}", item.Id, item.Name, item.Surname, item.Grade));
+                item.SleepBuddy = await conn.Table<Pillow>().ElementAtAsync(item.SleepBuddyId);
+                Debug.WriteLine( item.ToString() );
             }
+
+        }
+
+        private async void dropPersonTableTest()
+        {
+            SQLiteAsyncConnection conn = new SQLiteAsyncConnection("mybase");
+            await conn.DropTableAsync<Person>();
+            await conn.DropTableAsync<Pillow>();
+
         }
 
 
@@ -288,10 +343,13 @@ namespace gradeBook.Data
 
         public GradeDataSource()
         {
-            //CreateDatabase();
-            //CreatePersonTest();
-            //DisplayPersonTest();
+            //dropPersonTableTest();
+            //createDatabase();
+            //createPersonTest();
+            displayPersonTest();
+            
 
+            Debug.WriteLine("My data" + Windows.Storage.ApplicationData.Current.LocalFolder.Path);
 
             var group1 = new GradeDataGroup("HE-ARC-1",
                     "HE-ARC-1 G",
