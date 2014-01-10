@@ -94,7 +94,6 @@ namespace gradeBook.Data
         public int Id { get; set; }
 
         private string _uniqueId = string.Empty;
-        
         public string UniqueId
         {
             get { return this._uniqueId; }
@@ -102,7 +101,6 @@ namespace gradeBook.Data
         }
 
         private string _title = string.Empty;
-        [MaxLength(30)]
         public string Title
         {
             get { return this._title; }
@@ -117,11 +115,24 @@ namespace gradeBook.Data
         }
 
         private GradeDataGroup _group;
+        [Ignore]
         public GradeDataGroup Group
         {
             get { return this._group; }
-            set { this.SetProperty(ref this._group, value); }
+            set 
+            {
+                this.SetProperty(ref this._groupId, value.Id);
+                this.SetProperty(ref this._group, value); 
+            }
         }
+
+        private int _groupId;
+        public int GroupId
+        {
+            get { return this._groupId; }
+            set { this.SetProperty(ref this._groupId, value); }
+        }
+
 
         private string _description = string.Empty;
         public string Description
@@ -135,9 +146,9 @@ namespace gradeBook.Data
             return this.Title;
         }
 
-        public double Average
-        {
-            get { return 0.0; }
+        public abstract double Average
+        { 
+            get; 
         }
     }
 
@@ -158,9 +169,9 @@ namespace gradeBook.Data
             set { this.SetProperty(ref this._grade, value); }
         }
 
-        public new double Average
+        public override double Average
         {
-            get { return Ponderation * Grade; }
+            get { return Math.Round(Ponderation * Grade, 2 ); }
         }
         
     }
@@ -241,20 +252,22 @@ namespace gradeBook.Data
         }
 
         private ObservableCollection<GradeDataCommon> _items = new ObservableCollection<GradeDataCommon>();
+        [Ignore]
         public ObservableCollection<GradeDataCommon> Items
         {
             get { return this._items; }
         }
 
         private ObservableCollection<GradeDataCommon> _topItem = new ObservableCollection<GradeDataCommon>();
+        [Ignore]
         public ObservableCollection<GradeDataCommon> TopItems
         {
             get {return this._topItem; }
         }
 
-        public new double Average
+        public override double Average
         {
-            get
+            get 
             {
                 double sumPonderations = 0.0;
                 double sumGrades = 0.0;
@@ -263,7 +276,7 @@ namespace gradeBook.Data
                     sumPonderations += item.Ponderation;
                     sumGrades += item.Ponderation * item.Average;
                 }
-                return sumGrades / sumPonderations;
+                return Math.Round( sumGrades / sumPonderations, 2 );
             }
         }
     }
@@ -360,14 +373,14 @@ namespace gradeBook.Data
                     1.0,
                     group1,
                     "Look at the start",
-                    6.0));
+                    5.0));
 
             group1.Items.Add(new GradeDataItem("Sciences-A",
                     "Sciences-1 I",
                     1.0,
                     group1,
                     "Enjoy vectors",
-                    6.0));
+                    4.0));
 
             var group11 = new GradeDataGroup("Programmation",
                     "Programmation G",
@@ -379,7 +392,7 @@ namespace gradeBook.Data
                     1.0,
                     group11,
                     "LDAA ADDA STAA",
-                    6.0));
+                    5.5));
             group1.Items.Add(group11);
 
             this._rootGroup.Items.Add(group1);
@@ -394,7 +407,7 @@ namespace gradeBook.Data
                     1.0,
                     group2,
                     "Youhoooo, shiny!",
-                    6.0));
+                    4.8));
             this._rootGroup.Items.Add(group2);
 
             var imageNum = new GradeDataGroup("imagerieNumerique",
