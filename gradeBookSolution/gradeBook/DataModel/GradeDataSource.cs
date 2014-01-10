@@ -131,7 +131,7 @@ namespace gradeBook.Data
 
         public override double Average
         {
-            get { return Math.Round(Ponderation * Grade, 2); }
+            get { return Math.Round(Grade, 2); }
         }
 
         public override string ToString()
@@ -262,7 +262,15 @@ namespace gradeBook.Data
                     sumPonderations += item.Ponderation;
                     sumGrades += item.Ponderation * item.Average;
                 }
-                return Math.Round(sumGrades / sumPonderations, 2);
+
+                if (sumPonderations == 0.0)
+                {
+                    return 0.0;
+                }
+                else
+                {
+                    return Math.Round(sumGrades / sumPonderations, 2);
+                }
             }
         }
 
@@ -283,7 +291,7 @@ namespace gradeBook.Data
         private static string DATA_BASE_NAME = "gradeBookDataBase";
         private static int ROOT_ID = -1;
         private static int ROOT_GROUP_ID = -404; // Ne devrait jamais être trouvé
-        private static Boolean ARE_DATA_LOADED = false;
+        private static Boolean CLEAR_DONE_ONCE = false;
 
         private async void createDatabase()
         {
@@ -319,18 +327,281 @@ namespace gradeBook.Data
             }
         }
 
-        private async void createGradeDataItem()
+        private async void createGradeDataStub()
         {
             try
             {
                 SQLiteAsyncConnection conn = new SQLiteAsyncConnection(DATA_BASE_NAME);
-                GradeDataGroup firstOne = new GradeDataGroup("First group", 1.0, this._rootGroup, "first group");
-                //firstOne.GroupId = ROOT_ID;
-                Debug.WriteLine(firstOne.ToString());
-                Debug.WriteLine("GradeDataItem object creation : Success");
 
-                await conn.InsertAsync(firstOne);
-                Debug.WriteLine("GradeDataItem insert : Success");
+                Debug.WriteLine("\nGradeDataStub creation : Beginning\n");
+                
+                // Ecole d'Art Appliqué /////////////////////////////////////////////////
+                GradeDataGroup EAA = new GradeDataGroup("Ecole d'Arts Appliqués", 0, this._rootGroup, "Le concepteur multimédia conçoit des supports imprimés (print) et électroniques (screen). Il mène des réflexions, rédige et/ou suit des cahiers des charges, possède un sens analytique, esthétique et de communication afin de servir l’information et les messages pour des publics cibles spécifiques.\nIl développe des projets de communication éditoriaux, visuels et interactifs. Il maîtrise aussi bien les techniques et les outils de l’image que du son numérique. Il allie le discours et la forme au service de visuels fixes ou animés, interactifs ou inactifs, constitués de mise en page, de typographie, d’images fixes ou dynamiques et de sons.\nLe concepteur multimédia mène à bien l’intégralité d’une production multimédia. Il conçoit et réalise des produits en définissant le contexte culturel, économique et technologique du projet. Il a les facultés de travailler avec des partenaires spécialisés, voire de mener une équipe.");
+                this._rootGroup.Items.Add(EAA);
+                await conn.InsertAsync(EAA);
+                Debug.WriteLine("GradeDataGroup insert " + EAA.Title + " : Success");
+                Debug.WriteLine(EAA.ToString());
+
+                // 1ère année
+                GradeDataItem EAA1 = new GradeDataItem("1ère annnée", 1, EAA, "Année de tronc commun, connaissances artistiques pures.", 5.1 );
+                EAA.Items.Add(EAA1);
+                await conn.InsertAsync(EAA1);
+                Debug.WriteLine("GradeDataItem insert " + EAA1.Title + ": Success");
+                Debug.WriteLine(EAA1.ToString());
+
+                // 2ème année
+                GradeDataItem EAA2 = new GradeDataItem("2ème annnée", 1, EAA, "Apprentissage des bases dans de nombreux domaines : graphisme, traitement d'image, typographie, multimédia, vidéo, projets.", 4.8);
+                EAA.Items.Add(EAA2);
+                await conn.InsertAsync(EAA2);
+                Debug.WriteLine("GradeDataItem insert " + EAA2.Title + " : Success");
+                Debug.WriteLine(EAA2.ToString());
+
+                // 3ème année
+                GradeDataItem EAA3 = new GradeDataItem("3ème annnée", 1, EAA, "Approfondissement des connaissances : multimédia, photographie, communication, marketing, vidéo typographie", 4.8);
+                EAA.Items.Add(EAA3);
+                await conn.InsertAsync(EAA3);
+                Debug.WriteLine("GradeDataItem insert " + EAA3.Title + " : Success");
+                Debug.WriteLine(EAA3.ToString());
+
+                // 4ème année
+                GradeDataItem EAA4 = new GradeDataItem("4ème annnée", 1, EAA, "Application et spécialisation des connaissances : multimédia, typographie, photographie, communication, marketing, projet", 4.8);
+                EAA.Items.Add(EAA4);
+                await conn.InsertAsync(EAA4);
+                Debug.WriteLine("GradeDataItem insert " + EAA4.Title + " : Success");
+                Debug.WriteLine(EAA4.ToString());
+
+                // Maturité professionnelle artistique /////////////////////////////////////////////////
+                GradeDataGroup MPA = new GradeDataGroup("Maturité pro. artistique", 0, this._rootGroup, "La MPArt offre une formation culturelle de base élargie et une formation professionnelle qualifiée dans le but spécifique d’assurer la préparation adéquate à la fréquentation d’une Haute école spécialisée (HES) dans le domaine des arts appliqués.");
+                this._rootGroup.Items.Add(MPA);
+                await conn.InsertAsync(MPA);
+                Debug.WriteLine("GradeDataGroup insert " + MPA.Title + " : Success");
+                Debug.WriteLine(MPA.ToString());
+
+                // Français
+                GradeDataItem FRA = new GradeDataItem("Français", 1, MPA, "Français classique, litérature, dissertation...", 5.3);
+                MPA.Items.Add(FRA);
+                await conn.InsertAsync(FRA);
+                Debug.WriteLine("GradeDataItem insert " + FRA.Title + ": Success");
+                Debug.WriteLine(FRA.ToString());
+
+                // Allemand
+                GradeDataItem ALL = new GradeDataItem("Allemand", 1, MPA, "Allemand classique, grammaire, vocabulaire, dissertation...", 4.8);
+                MPA.Items.Add(ALL);
+                await conn.InsertAsync(ALL);
+                Debug.WriteLine("GradeDataItem insert " + ALL.Title + ": Success");
+                Debug.WriteLine(ALL.ToString());
+
+                // Anglais
+                GradeDataItem ANG = new GradeDataItem("Anglais", 1, MPA, "Anglais classique, grammaire, vocabulaire, dissertation...", 5.5);
+                MPA.Items.Add(ANG);
+                await conn.InsertAsync(ANG);
+                Debug.WriteLine("GradeDataItem insert " + ANG.Title + ": Success");
+                Debug.WriteLine(ANG.ToString());
+
+                // Histoire
+                GradeDataItem HIS = new GradeDataItem("Histoire et institution politique", 1, MPA, "Connaitre son passé, comprendre le présent, prévoir l'avenir.", 6.0);
+                MPA.Items.Add(HIS);
+                await conn.InsertAsync(HIS);
+                Debug.WriteLine("GradeDataItem insert " + HIS.Title + ": Success");
+                Debug.WriteLine(HIS.ToString());
+
+                // Economie
+                GradeDataItem ECO = new GradeDataItem("Economie", 1, MPA, "Economie d'entreprise, droit et économie politique", 5.5);
+                MPA.Items.Add(ECO);
+                await conn.InsertAsync(ECO);
+                Debug.WriteLine("GradeDataItem insert " + ECO.Title + ": Success");
+                Debug.WriteLine(ECO.ToString());
+
+                // Mathématiques
+                GradeDataItem MAT = new GradeDataItem("Mathématiques", 1, MPA, "1+1 = 2   \0/", 5.8);
+                MPA.Items.Add(MAT);
+                await conn.InsertAsync(MAT);
+                Debug.WriteLine("GradeDataItem insert " + MAT.Title + ": Success");
+                Debug.WriteLine(MAT.ToString());
+
+                // Culture et art
+                GradeDataItem ART = new GradeDataItem("Culture et art", 1, MPA, "Histoire de l'art, art plastique, application et théorie...", 5.3);
+                MPA.Items.Add(ART);
+                await conn.InsertAsync(ART);
+                Debug.WriteLine("GradeDataItem insert " + ART.Title + ": Success");
+                Debug.WriteLine(ART.ToString());
+
+                // Travail personnel
+                GradeDataItem TPE = new GradeDataItem("Travail personnel", 1, MPA, "Conception et réalisation d'un journale artistique régional", 6.0);
+                MPA.Items.Add(TPE);
+                await conn.InsertAsync(TPE);
+                Debug.WriteLine("GradeDataItem insert " + TPE.Title + ": Success");
+                Debug.WriteLine(TPE.ToString());
+
+                // HE-Arc /////////////////////////////////////////////////
+                GradeDataGroup HEA = new GradeDataGroup("Haute école ARC - ingénierie", 0, this._rootGroup, "L’ingénieur-e ayant obtenu le Bachelor en informatique pourra être engagé par des entreprises les plus diverses où il occupera des postes tels qu’ingénieur de développement, ingénieur technico-commercial, consultant, etc.\nSes compétences en gestion de projets lui permettront de faire évoluer sa carrière vers des responsabilités de projets, la gestion d’équipes ou la création d’entreprise.");
+                this._rootGroup.Items.Add(HEA);
+                await conn.InsertAsync(HEA);
+                Debug.WriteLine("GradeDataGroup insert " + HEA.Title + " : Success");
+                Debug.WriteLine(HEA.ToString());
+
+                // 1ère année
+                GradeDataGroup HEA1 = new GradeDataGroup("1ère année", 1, HEA, "Tronc commun ou comment faire des sciences en masse.");
+                HEA.Items.Add(HEA1);
+                await conn.InsertAsync(HEA1);
+                Debug.WriteLine("GradeDataItem insert " + HEA1.Title + ": Success");
+                Debug.WriteLine(HEA1.ToString());
+
+                    // Communication
+                    GradeDataItem COM = new GradeDataItem("Langues", 1, HEA1, "", 5.9);
+                    HEA1.Items.Add(COM);
+                    await conn.InsertAsync(COM);
+                    Debug.WriteLine("GradeDataItem insert " + COM.Title + ": Success");
+                    Debug.WriteLine(COM.ToString());
+
+                    // Sciences 1A
+                    GradeDataItem SCA = new GradeDataItem("Sciences 1A", 1, HEA1, "", 4.2);
+                    HEA1.Items.Add(SCA);
+                    await conn.InsertAsync(SCA);
+                    Debug.WriteLine("GradeDataItem insert " + SCA.Title + ": Success");
+                    Debug.WriteLine(SCA.ToString());
+
+                    // Sciences 1B
+                    GradeDataItem SCB = new GradeDataItem("Sciences 1B", 1, HEA1, "", 4.0);
+                    HEA1.Items.Add(SCB);
+                    await conn.InsertAsync(SCB);
+                    Debug.WriteLine("GradeDataItem insert " + SCB.Title + ": Success");
+                    Debug.WriteLine(SCB.ToString());
+
+                    // Programmation 1
+                    GradeDataItem PRG = new GradeDataItem("Programmation 1", 1, HEA1, "Hello world !", 5.2);
+                    HEA1.Items.Add(PRG);
+                    await conn.InsertAsync(PRG);
+                    Debug.WriteLine("GradeDataItem insert " + PRG.Title + ": Success");
+                    Debug.WriteLine(PRG.ToString());
+
+                    // OS et réseaux
+                    GradeDataItem OSR = new GradeDataItem("OS et réseaux", 1, HEA1, "", 5.0);
+                    HEA1.Items.Add(OSR);
+                    await conn.InsertAsync(OSR);
+                    Debug.WriteLine("GradeDataItem insert " + OSR.Title + ": Success");
+                    Debug.WriteLine(OSR.ToString());
+
+                    // Sys num et elect
+                    GradeDataItem SYS = new GradeDataItem("Systèmes numériques et éléctronique ", 1, HEA1, "OR XOR AND", 4.7);
+                    HEA1.Items.Add(SYS);
+                    await conn.InsertAsync(SYS);
+                    Debug.WriteLine("GradeDataItem insert " + SYS.Title + ": Success");
+                    Debug.WriteLine(SYS.ToString());
+
+                    // Projet P1
+                    GradeDataItem PR1 = new GradeDataItem("Projet P1", 1, HEA1, "Pointeur d'étoiles", 5.8);
+                    HEA1.Items.Add(PR1);
+                    await conn.InsertAsync(PR1);
+                    Debug.WriteLine("GradeDataItem insert " + PR1.Title + ": Success");
+                    Debug.WriteLine(PR1.ToString());
+
+                // 2eme année
+                GradeDataGroup HEA2 = new GradeDataGroup("2ème année", 1, HEA, "Do it your self");
+                HEA.Items.Add(HEA2);
+                await conn.InsertAsync(HEA2);
+                Debug.WriteLine("GradeDataItem insert " + HEA2.Title + ": Success");
+                Debug.WriteLine(HEA2.ToString());
+
+                    // Sciences 2
+                    GradeDataItem SC2 = new GradeDataItem("Sciences 2", 1, HEA2, "Analyse, probabilités et statistiques", 4.7);
+                    HEA2.Items.Add(SC2);
+                    await conn.InsertAsync(SC2);
+                    Debug.WriteLine("GradeDataItem insert " + SC2.Title + ": Success");
+                    Debug.WriteLine(SC2.ToString());
+
+                    // Langages et FW
+                    GradeDataItem LFW = new GradeDataItem("Langages et frameworks", 1, HEA2, "Analyse, probabilités et statistiques", 5.1);
+                    HEA2.Items.Add(LFW);
+                    await conn.InsertAsync(LFW);
+                    Debug.WriteLine("GradeDataItem insert " + LFW.Title + ": Success");
+                    Debug.WriteLine(LFW.ToString());
+
+                    // Techniques de conception
+                    GradeDataItem TCO = new GradeDataItem("Techniques de conception", 1, HEA2, "Analyse, probabilités et statistiques", 5.4);
+                    HEA2.Items.Add(TCO);
+                    await conn.InsertAsync(TCO);
+                    Debug.WriteLine("GradeDataItem insert " + TCO.Title + ": Success");
+                    Debug.WriteLine(TCO.ToString());
+
+                    // Techniques de modélisation
+                    GradeDataItem TCM = new GradeDataItem("Techniques de modélisation", 1, HEA2, "Analyse, probabilités et statistiques", 5.4);
+                    HEA2.Items.Add(TCM);
+                    await conn.InsertAsync(TCM);
+                    Debug.WriteLine("GradeDataItem insert " + TCM.Title + ": Success");
+                    Debug.WriteLine(TCM.ToString());
+
+                    // Réseaux et internet
+                    GradeDataItem RIT = new GradeDataItem("Réseaux et internet", 1, HEA2, "Analyse, probabilités et statistiques", 5.0);
+                    HEA2.Items.Add(RIT);
+                    await conn.InsertAsync(RIT);
+                    Debug.WriteLine("GradeDataItem insert " + RIT.Title + ": Success");
+                    Debug.WriteLine(RIT.ToString());
+
+                    // Projet P2
+                    GradeDataItem PR2 = new GradeDataItem("Projet P2", 1, HEA2, "Analyse, probabilités et statistiques", 6.0);
+                    HEA2.Items.Add(PR2);
+                    await conn.InsertAsync(PR2);
+                    Debug.WriteLine("GradeDataItem insert " + PR2.Title + ": Success");
+                    Debug.WriteLine(PR2.ToString());
+
+                // 3ème année
+                GradeDataGroup HEA3 = new GradeDataGroup("3ème année", 1, HEA, "Projet, projet, projet, projet, projet, projet, projet, ...");
+                HEA.Items.Add(HEA3);
+                await conn.InsertAsync(HEA3);
+                Debug.WriteLine("GradeDataItem insert " + HEA3.Title + ": Success");
+                Debug.WriteLine(HEA3.ToString());
+
+                    // Gestion 
+                    GradeDataGroup GST = new GradeDataGroup("Gestion", 1, HEA3, "Fonctionnement des entreprises, communication interpersonnelle, méthodologie.");
+                    HEA3.Items.Add(GST);
+                    await conn.InsertAsync(GST);
+                    Debug.WriteLine("GradeDataItem insert " + GST.Title + ": Success");
+                    Debug.WriteLine(GST.ToString());
+
+                        // Qualité logiciel 
+                        GradeDataItem QLO = new GradeDataItem("Qualité logiciel", 1, GST, "Citer les critères de qualité du logiciel. Reconnaître le type et les limites d’une licence. Pour un projet logiciel donné, identifier les risques généraux. Proposer une méthodologie de test dans un cas pratique donné. Proposer une méthodologie de développement adaptée à un cas pratique donné.", 6.0);
+                        GST.Items.Add(QLO);
+                        await conn.InsertAsync(QLO);
+                        Debug.WriteLine("GradeDataItem insert " + QLO.Title + ": Success");
+                        Debug.WriteLine(QLO.ToString());
+
+                        // Gestion et économie d'entreprise
+                        GradeDataItem GEE = new GradeDataItem("Gestion et économie d'entreprise", 0.5, GST, "Juridique et économique", 3.8);
+                        GST.Items.Add(GEE);
+                        await conn.InsertAsync(GEE);
+                        Debug.WriteLine("GradeDataItem insert " + GEE.Title + ": Success");
+                        Debug.WriteLine(GEE.ToString());
+
+                    // Imagerie numérique 
+                    GradeDataItem IMG = new GradeDataItem("Imagerie numérique", 1, HEA3, "Traitement d'image et infographie", 5.62);
+                    HEA3.Items.Add(IMG);
+                    await conn.InsertAsync(IMG);
+                    Debug.WriteLine("GradeDataItem insert " + IMG.Title + ": Success");
+                    Debug.WriteLine(IMG.ToString());
+
+                    // Développement système
+                    GradeDataItem DVS = new GradeDataItem("Développement système", 0, HEA3, "Bases de l'informatique", 0.0);
+                    HEA3.Items.Add(DVS);
+                    await conn.InsertAsync(DVS);
+                    Debug.WriteLine("GradeDataItem insert " + DVS.Title + ": Success");
+                    Debug.WriteLine(DVS.ToString());
+
+                    // Développement web et mobile
+                    GradeDataItem DWM = new GradeDataItem("Développement web et mobile", 0, HEA3, "Utilisation de framework.", 0.0);
+                    HEA3.Items.Add(DWM);
+                    await conn.InsertAsync(DWM);
+                    Debug.WriteLine("GradeDataItem insert " + DWM.Title + ": Success");
+                    Debug.WriteLine(DWM.ToString());
+
+                    // IA et cours à choix
+                    GradeDataItem IAE = new GradeDataItem("IA et cours à choix", 0, HEA3, "Comprendre \"cours à choix\" = JEE", 0.0);
+                    HEA3.Items.Add(IAE);
+                    await conn.InsertAsync(IAE);
+                    Debug.WriteLine("GradeDataItem insert " + IAE.Title + ": Success");
+                    Debug.WriteLine(IAE.ToString());
+
+                Debug.WriteLine("\nGradeDataStub creation : Ending\n");
             }
             catch (Exception e)
             {
@@ -384,244 +655,27 @@ namespace gradeBook.Data
             get { return this._rootGroup; }
         }
 
+        private void clearAndCreateDatabase()
+        {
+            if (CLEAR_DONE_ONCE == false)
+            {
+                dropGradeDataTables();
+                createDatabase();
+                
+                CLEAR_DONE_ONCE = true;
+            }
+        }
+
         public GradeDataSource()
         {
+            // DevTools
+            // DevTools : Supression et génération de la base de données
+            //clearCreateDatabase(); // Ne pas executer en meme temps ces deux méthodes.
+            //createGradeDataStub();
 
-            Debug.WriteLine(this._rootGroup.ToString());
+            // Check si la base de données est disponible, si non la créé.
             //createDatabase();
-            //dropGradeDataTables();
-            //createGradeDataItem();
             loadGradeData(this._rootGroup);
-            ARE_DATA_LOADED = true;
-
-
-
-
-            /*
-            Debug.WriteLine("My data" + Windows.Storage.ApplicationData.Current.LocalFolder.Path);
-
-            var group1 = new GradeDataGroup(
-                    "HE-ARC-1 G",
-                    1.0, null, "The funniest science year");
-                    
-            group1.Items.Add(new GradeDataItem(
-                    "Projet 1 I",
-                    1.0,
-                    group1,
-                    "Look at the start",
-                    5.0));
-
-            group1.Items.Add(new GradeDataItem(
-                    "Sciences-1 I",
-                    1.0,
-                    group1,
-                    "Enjoy vectors",
-                    4.0));
-
-            var group11 = new GradeDataGroup(
-                    "Programmation G",
-                    1.0,
-                    group1,
-                    "Hello world");
-            group11.Items.Add(new GradeDataItem(
-                    "Assembleur I",
-                    1.0,
-                    group11,
-                    "LDAA ADDA STAA",
-                    5.5));
-            group1.Items.Add(group11);
-
-            this._rootGroup.Items.Add(group1);
-
-            var group2 = new GradeDataGroup(
-                    "HE-ARC-2 G",
-                    1.0, 
-                    null,
-                    "Try project from scratch");
-            group2.Items.Add(new GradeDataItem(
-                    "Projet-2 I",
-                    1.0,
-                    group2,
-                    "Youhoooo, shiny!",
-                    4.8));
-            this._rootGroup.Items.Add(group2);
-
-            var imageNum = new GradeDataGroup(
-                    "Imagerie numérique",
-                    1.0,
-                    null,
-                    @"Les objectifs d’apprentissage de ce module sont classés selon les trois degrés croissants de difficulté:
-(M) Mémorisation, (A) Application et compréhension, (R) Résolution de problèmes (analyse, synthèse, évaluation).
-A l’issue du module, l'étudiant doit être capable de :
-
-- Reproduire les exercices faits en classe. (M)
-- Appliquer ce qui a été appris en classe dans des situations nouvelles. (A)
-- Réaliser, tester et programmer des applications selon un cahier des charges. (R)
-
-Evaluation des apprentissages
-
--	Evaluations des différentes Unités d’Enseignement (UE)
--	Un examen oral de 30 min sur « Infographie» et «Traitement d’image » à la fin du semestre de printemps 
-
-");
-            var trimg = new GradeDataGroup(
-                    "Traitement d'image",
-                    1.0,
-                    imageNum,
-                    @"Identifiant	3252.2
-
-
-Méthode d’enseignement
-
-    Cours et travaux pratiques en laboratoire
-    
-    
-Objectifs spécifiques
-
-    A l'issue du module, l'étudiant doit être capable de :
--	Décrire les caractéristiques des images et des principaux algorithmes de traitements y relatifs. (M) 
--	Concevoir une application de traitement d’image. (R)
--	Implémenter et/ou utiliser les principaux algorithmes de traitement de l'image. (R)
-
-
-Modalités d’évaluation
-
--	Deux contrôles principaux (CP) écrits, annoncés et obligatoires
--	Un projet en groupe ou individuel à rendre en fin d'année
--	Un examen oral à la fin du semestre de printemps
-
-
-Description du contenu (mots-clés)
-
--	Caractéristiques des images
--	Chaîne d'acquisition d'images
--	Bruit et Filtrage
--	Convolution
--	Comparaison d’images
--	Morphologique mathématique
--	Détection de contours
--	Segmentation 
--	Caractérisation
--	Transformée de Fourrier
-
-
-Supports de cours	Au choix de l’enseignant
-
-Outils utilisés	Si des outils (informatiques, par exemple) sont utilisés, ils sont à préciser par le responsable de l’unité d’enseignement au début du cours
-
-
-Particularité d’organisation	
-
-Environ 2h30 de travail personnel par semaine
-");
-            imageNum.Items.Add(trimg);
-            var infogra = new GradeDataGroup(
-                    "Infographie",
-                    1.0,
-                    imageNum,
-                    "Un cours bidon");
-            imageNum.Items.Add(infogra);
-
-            infogra.Items.Add(new GradeDataItem(
-                    "Quick Quiz 1",
-                    1.0,
-                    infogra,
-                    "7 minutes...",
-                    6.0));
-            infogra.Items.Add(new GradeDataItem(
-                    "Quick Quiz 2",
-                    1.0,
-                    infogra,
-                    "7 minutes...",
-                    6.0));
-            infogra.Items.Add(new GradeDataItem(
-                    "Quick Quiz 3",
-                    1.0,
-                    infogra,
-                    "7 minutes...",
-                    6.0));
-            infogra.Items.Add(new GradeDataItem(
-                    "Quick Quiz 4",
-                    1.0,
-                    infogra,
-                    "7 minutes...",
-                    6.0));
-            infogra.Items.Add(new GradeDataItem(
-                    "Quick Quiz 5",
-                    1.0,
-                    infogra,
-                    "7 minutes...",
-                    6.0));
-            infogra.Items.Add(new GradeDataItem(
-                    "Quick Quiz 6",
-                    1.0,
-                    infogra,
-                    "7 minutes...",
-                    6.0));
-            infogra.Items.Add(new GradeDataItem(
-                    "Quick Quiz 7",
-                    1.0,
-                    infogra,
-                    "7 minutes...",
-                    6.0));
-            infogra.Items.Add(new GradeDataItem(
-                    "Quick Quiz 8",
-                    1.0,
-                    infogra,
-                    "7 minutes...",
-                    6.0));
-            infogra.Items.Add(new GradeDataItem(
-                    "Quick Quiz 9",
-                    1.0,
-                    infogra,
-                    "7 minutes...",
-                    6.0));
-            infogra.Items.Add(new GradeDataItem(
-                    "Quick Quiz 10",
-                    1.0,
-                    infogra,
-                    "7 minutes...",
-                    6.0));
-            infogra.Items.Add(new GradeDataItem(
-                    "Quick Quiz 11",
-                    1.0,
-                    infogra,
-                    "7 minutes...",
-                    6.0));
-            infogra.Items.Add(new GradeDataItem(
-                    "Quick Quiz 12",
-                    1.0,
-                    infogra,
-                    "7 minutes...",
-                    6.0));
-            infogra.Items.Add(new GradeDataItem(
-                    "Quick Quiz 13",
-                    1.0,
-                    infogra,
-                    "7 minutes...",
-                    6.0));
-            infogra.Items.Add(new GradeDataItem(
-                    "Quick Quiz 14",
-                    1.0,
-                    infogra,
-                    "7 minutes...",
-                    6.0));
-            trimg.Items.Add(new GradeDataItem(
-                    "Test 1",
-                    1.0,
-                    trimg,
-                    "Hae duae provinciae bello quondam piratico catervis mixtae praedonum a Servilio pro consule missae sub iugum factae sunt vectigales. et hae quidem regiones velut in prominenti terrarum lingua positae ob orbe eoo monte Amano disparantur.",
-                    6.0));
-
-            trimg.Items.Add(new GradeDataItem(
-                    "Projet",
-                    1.0,
-                    trimg,
-                    "Hae duae provinciae bello quondam piratico catervis mixtae praedonum a Servilio pro consule missae sub iugum factae sunt vectigales. et hae quidem regiones velut in prominenti terrarum lingua positae ob orbe eoo monte Amano disparantur.",
-                    6.0));
-
-            this._rootGroup.Items.Add(imageNum);
-         */
         }
     }
 }
