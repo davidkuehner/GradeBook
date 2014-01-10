@@ -65,7 +65,7 @@ namespace gradeBook
         protected override void SaveState(Dictionary<String, Object> pageState)
         {
             var selectedItem = (GradeDataCommon)this.flipView.SelectedItem;
-            pageState["SelectedItem"] = selectedItem.UniqueId;
+            pageState["SelectedItem"] = selectedItem.Id;
         }
     }
 }

@@ -23,55 +23,6 @@ using System.Diagnostics;
 
 namespace gradeBook.Data
 {
-
-    public class Person
-    {
-        [PrimaryKey, AutoIncrement]
-        public int Id { get; set; }
-
-        [MaxLength(30)]
-        public string Name { get; set; }
-
-        [MaxLength(30)]
-        public string Surname { get; set; }
-
-        public int Grade { get; set; }
-
-        private Pillow _sleepBuddy = null;
-        [Ignore]
-        public Pillow SleepBuddy { 
-            
-            get { return this._sleepBuddy; }
-            set {
-                this.SleepBuddyId = value.Id;
-                this._sleepBuddy = value; 
-                }
-        }
-
-        public int SleepBuddyId { get; set; }
-
-        public override string ToString()
-        {
-            return base.ToString() + string.Format(" [ Name = {0} Surname = {1} Grade = {2} SleepBuddy = {3} ]", Name, Surname, Grade, SleepBuddy.ToString());
-        }
-
-    }
-
-    public class Pillow
-    {
-        [PrimaryKey, AutoIncrement]
-        public int Id { get; set; }
-
-        public string Color { get; set; }
-
-        public int Weight { get; set; }
-
-        public override string ToString()
-        {
-            return base.ToString() + string.Format(" [ Id = {0} Color = {1} Weight = {2} ]", Id, Color, Weight);
-        }
-    }
-
     /// <summary>
     /// Classe de base pour <see cref="GradeDataItem"/> et <see cref="GradeDataGroup"/> qui
     /// définit les propriétés communes au deux.
@@ -81,24 +32,24 @@ namespace gradeBook.Data
     {
         private static Uri _baseUri = new Uri("ms-appx:///");
 
-        public GradeDataCommon(String uniqueId, String title, Double ponderation, GradeDataGroup group, String description)
+        public GradeDataCommon(String title, Double ponderation, GradeDataGroup group, String description)
         {
-            this._uniqueId = uniqueId;
             this._title = title;
             this._ponderation = ponderation;
             this._group = group;
+            this._groupId = group.Id;
             this._description = description;
+        }
+
+        /// <summary>
+        ///  Constructeur par défaut nécessaire pour SqLite
+        /// </summary>
+        public GradeDataCommon()
+        {
         }
 
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
-
-        private string _uniqueId = string.Empty;
-        public string UniqueId
-        {
-            get { return this._uniqueId; }
-            set { this.SetProperty(ref this._uniqueId, value); }
-        }
 
         private string _title = string.Empty;
         public string Title
@@ -119,10 +70,10 @@ namespace gradeBook.Data
         public GradeDataGroup Group
         {
             get { return this._group; }
-            set 
+            set
             {
                 this.SetProperty(ref this._groupId, value.Id);
-                this.SetProperty(ref this._group, value); 
+                this.SetProperty(ref this._group, value);
             }
         }
 
@@ -147,8 +98,8 @@ namespace gradeBook.Data
         }
 
         public abstract double Average
-        { 
-            get; 
+        {
+            get;
         }
     }
 
@@ -157,11 +108,20 @@ namespace gradeBook.Data
     /// </summary>
     public class GradeDataItem : GradeDataCommon
     {
-        public GradeDataItem(String uniqueId, String title, Double ponderation, GradeDataGroup group, String description, Double grade)
-            : base(uniqueId, title, ponderation, group, description)
+        public GradeDataItem(String title, Double ponderation, GradeDataGroup group, String description, Double grade)
+            : base(title, ponderation, group, description)
         {
             this._grade = grade;
         }
+
+        /// <summary>
+        ///  Constructeur par défaut nécessaire pour SqLite
+        /// </summary>
+        public GradeDataItem()
+            : base()
+        {
+        }
+
         private Double _grade = 0.0;
         public Double Grade
         {
@@ -171,9 +131,14 @@ namespace gradeBook.Data
 
         public override double Average
         {
-            get { return Math.Round(Ponderation * Grade, 2 ); }
+            get { return Math.Round(Ponderation * Grade, 2); }
         }
-        
+
+        public override string ToString()
+        {
+            return base.ToString() + string.Format(" [ Id = {0} Title = {1} Grade = {2} Pond. = {3}  Desc = {4} GroupId = {5} ]", Id, Title, Grade, Ponderation, Description, GroupId);
+        }
+
     }
 
     /// <summary>
@@ -181,10 +146,31 @@ namespace gradeBook.Data
     /// </summary>
     public class GradeDataGroup : GradeDataCommon
     {
-        public GradeDataGroup(String uniqueId, String title, Double ponderation, GradeDataGroup group, String description)
-            : base(uniqueId, title, ponderation, group, description)
+        public GradeDataGroup(String title, Double ponderation, GradeDataGroup group, String description)
+            : base(title, ponderation, group, description)
         {
             Items.CollectionChanged += ItemsCollectionChanged;
+        }
+
+        /// <summary>
+        ///  Constructeur spécial pour l'élément root ( pas d'appel à base )
+        /// </summary>
+        public GradeDataGroup(String title, Double ponderation, int id, int groupId, String description)
+        {
+            this.Title = title;
+            this.Ponderation = ponderation;
+            this.Id = id;
+            this.GroupId = groupId;
+            this.Description = description;
+            Items.CollectionChanged += ItemsCollectionChanged;
+        }
+
+        /// <summary>
+        ///  Constructeur par défaut nécessaire pour SqLite
+        /// </summary>
+        public GradeDataGroup()
+            : base()
+        {
         }
 
         private void ItemsCollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
@@ -202,7 +188,7 @@ namespace gradeBook.Data
                 case NotifyCollectionChangedAction.Add:
                     if (e.NewStartingIndex < 12)
                     {
-                        TopItems.Insert(e.NewStartingIndex,Items[e.NewStartingIndex]);
+                        TopItems.Insert(e.NewStartingIndex, Items[e.NewStartingIndex]);
                         if (TopItems.Count > 12)
                         {
                             TopItems.RemoveAt(12);
@@ -262,12 +248,12 @@ namespace gradeBook.Data
         [Ignore]
         public ObservableCollection<GradeDataCommon> TopItems
         {
-            get {return this._topItem; }
+            get { return this._topItem; }
         }
 
         public override double Average
         {
-            get 
+            get
             {
                 double sumPonderations = 0.0;
                 double sumGrades = 0.0;
@@ -276,8 +262,13 @@ namespace gradeBook.Data
                     sumPonderations += item.Ponderation;
                     sumGrades += item.Ponderation * item.Average;
                 }
-                return Math.Round( sumGrades / sumPonderations, 2 );
+                return Math.Round(sumGrades / sumPonderations, 2);
             }
+        }
+
+        public override string ToString()
+        {
+            return base.ToString() + string.Format(" [ Id = {0} Title = {1} Pond. = {2}  Desc = {3} GroupId = {4} ]", Id, Title, Ponderation, Description, GroupId);
         }
     }
 
@@ -289,66 +280,105 @@ namespace gradeBook.Data
     /// </summary>
     public sealed class GradeDataSource
     {
+        private static string DATA_BASE_NAME = "gradeBookDataBase";
+        private static int ROOT_ID = -1;
+        private static int ROOT_GROUP_ID = -404; // Ne devrait jamais être trouvé
+        private static Boolean ARE_DATA_LOADED = false;
 
-        // Database creation
         private async void createDatabase()
         {
-            SQLiteAsyncConnection conn = new SQLiteAsyncConnection("mybase");
-            await conn.CreateTableAsync<Pillow>();
-            await conn.CreateTableAsync<Person>();
-            
-        }
-
-        private async void createPersonTest()
-        {
-            SQLiteAsyncConnection conn = new SQLiteAsyncConnection("mybase");
-
-            Pillow pil = new Pillow
+            try
             {
-                Color = "blue",
-                Weight = 12
-            };
-
-            Person person = new Person
-            {
-                Name = "David",
-                Surname = "asdfasdfasdasdfasdfasdfasdf",
-                Grade = 444,
-                SleepBuddy = pil
-            };
-
-            await conn.InsertAsync(pil);
-            await conn.InsertAsync(person);
-        }
-
-        private async void displayPersonTest()
-        {
-            SQLiteAsyncConnection conn = new SQLiteAsyncConnection("mybase");
-
-            var query = conn.Table<Person>().Where(x => x.Name == "David");
-            var result = await query.ToListAsync();
-
-
-            foreach (var item in result)
-            {
-                item.SleepBuddy = await conn.Table<Pillow>().ElementAtAsync(item.SleepBuddyId);
-                Debug.WriteLine( item.ToString() );
+                SQLiteAsyncConnection conn = new SQLiteAsyncConnection(DATA_BASE_NAME);
+                Debug.WriteLine("Database creation : Success");
+                await conn.CreateTableAsync<GradeDataItem>();
+                Debug.WriteLine("Table Item creation : Success");
+                await conn.CreateTableAsync<GradeDataGroup>();
+                Debug.WriteLine("Table Group creation : Success");
             }
-
+            catch (Exception e)
+            {
+                Debug.WriteLine("Database creation : Failed");
+                Debug.WriteLine("Message : " + e.Message);
+            }
         }
 
-        private async void dropPersonTableTest()
+        private async void dropGradeDataTables()
         {
-            SQLiteAsyncConnection conn = new SQLiteAsyncConnection("mybase");
-            await conn.DropTableAsync<Person>();
-            await conn.DropTableAsync<Pillow>();
-
+            try
+            {
+                SQLiteAsyncConnection conn = new SQLiteAsyncConnection(DATA_BASE_NAME);
+                await conn.DropTableAsync<GradeDataItem>();
+                await conn.DropTableAsync<GradeDataGroup>();
+                Debug.WriteLine("GradeDatabase deletion : Success");
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("GradeDatabase deletion : Failed");
+                Debug.WriteLine("Message : " + e.Message);
+            }
         }
 
+        private async void createGradeDataItem()
+        {
+            try
+            {
+                SQLiteAsyncConnection conn = new SQLiteAsyncConnection(DATA_BASE_NAME);
+                GradeDataGroup firstOne = new GradeDataGroup("First group", 1.0, this._rootGroup, "first group");
+                //firstOne.GroupId = ROOT_ID;
+                Debug.WriteLine(firstOne.ToString());
+                Debug.WriteLine("GradeDataItem object creation : Success");
+
+                await conn.InsertAsync(firstOne);
+                Debug.WriteLine("GradeDataItem insert : Success");
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("GradeDataItem insert : Failed");
+                Debug.WriteLine("Message : " + e.Message);
+            }
+        }
+
+        private async void loadGradeData(GradeDataGroup parent)
+        {
+            try
+            {
+                SQLiteAsyncConnection conn = new SQLiteAsyncConnection(DATA_BASE_NAME);
+                var queryItems = conn.Table<GradeDataItem>().Where(x => x.GroupId == parent.Id);
+                Debug.WriteLine("GradeDataItem query : Success");
+                var resultItems = await queryItems.ToListAsync();
+                Debug.WriteLine("Number of element in query : " + resultItems.Count);
+
+                foreach (var item in resultItems)
+                {
+                    Debug.WriteLine(item.ToString());
+                    parent.Items.Add(item);
+                    item.Group = parent;
+                }
+
+                var queryGroups = conn.Table<GradeDataGroup>().Where(x => x.GroupId == parent.Id);
+                Debug.WriteLine("GradeDataGroup query : Success");
+                var resultGroups = await queryGroups.ToListAsync();
+                Debug.WriteLine("Number of element in query : " + resultGroups.Count);
+
+                foreach (var group in resultGroups)
+                {
+                    Debug.WriteLine(group.ToString());
+                    parent.Items.Add(group);
+                    group.Group = parent;
+                    loadGradeData(group);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine("GradeDataItem query : Failed");
+                Debug.WriteLine("Message : " + e.Message);
+            }
+        }
 
         private static GradeDataSource _GradeDataSource = new GradeDataSource();
 
-        private GradeDataGroup _rootGroup = new GradeDataGroup("RootGroup", "Grade Book", 1.0, null, "You can orderd your notes by group");
+        private GradeDataGroup _rootGroup = new GradeDataGroup("Grade Book", 1.0, ROOT_ID, ROOT_GROUP_ID, "You can orderd your notes by group");
         public GradeDataGroup RootGroup
         {
             get { return this._rootGroup; }
@@ -356,38 +386,44 @@ namespace gradeBook.Data
 
         public GradeDataSource()
         {
-            //dropPersonTableTest();
-            //createDatabase();
-            //createPersonTest();
-            displayPersonTest();
-            
 
+            Debug.WriteLine(this._rootGroup.ToString());
+            //createDatabase();
+            //dropGradeDataTables();
+            //createGradeDataItem();
+            loadGradeData(this._rootGroup);
+            ARE_DATA_LOADED = true;
+
+
+
+
+            /*
             Debug.WriteLine("My data" + Windows.Storage.ApplicationData.Current.LocalFolder.Path);
 
-            var group1 = new GradeDataGroup("HE-ARC-1",
+            var group1 = new GradeDataGroup(
                     "HE-ARC-1 G",
                     1.0, null, "The funniest science year");
                     
-            group1.Items.Add(new GradeDataItem("P1",
+            group1.Items.Add(new GradeDataItem(
                     "Projet 1 I",
                     1.0,
                     group1,
                     "Look at the start",
                     5.0));
 
-            group1.Items.Add(new GradeDataItem("Sciences-A",
+            group1.Items.Add(new GradeDataItem(
                     "Sciences-1 I",
                     1.0,
                     group1,
                     "Enjoy vectors",
                     4.0));
 
-            var group11 = new GradeDataGroup("Programmation",
+            var group11 = new GradeDataGroup(
                     "Programmation G",
                     1.0,
                     group1,
                     "Hello world");
-            group11.Items.Add(new GradeDataItem("Assembleur",
+            group11.Items.Add(new GradeDataItem(
                     "Assembleur I",
                     1.0,
                     group11,
@@ -397,12 +433,12 @@ namespace gradeBook.Data
 
             this._rootGroup.Items.Add(group1);
 
-            var group2 = new GradeDataGroup("HE-ARC-2",
+            var group2 = new GradeDataGroup(
                     "HE-ARC-2 G",
                     1.0, 
                     null,
                     "Try project from scratch");
-            group2.Items.Add(new GradeDataItem("Projet-2",
+            group2.Items.Add(new GradeDataItem(
                     "Projet-2 I",
                     1.0,
                     group2,
@@ -410,7 +446,7 @@ namespace gradeBook.Data
                     4.8));
             this._rootGroup.Items.Add(group2);
 
-            var imageNum = new GradeDataGroup("imagerieNumerique",
+            var imageNum = new GradeDataGroup(
                     "Imagerie numérique",
                     1.0,
                     null,
@@ -428,7 +464,7 @@ Evaluation des apprentissages
 -	Un examen oral de 30 min sur « Infographie» et «Traitement d’image » à la fin du semestre de printemps 
 
 ");
-            var trimg = new GradeDataGroup("traitementImage",
+            var trimg = new GradeDataGroup(
                     "Traitement d'image",
                     1.0,
                     imageNum,
@@ -437,12 +473,12 @@ Evaluation des apprentissages
 
 Méthode d’enseignement
 
-	Cours et travaux pratiques en laboratoire
+    Cours et travaux pratiques en laboratoire
     
     
 Objectifs spécifiques
 
-	A l'issue du module, l'étudiant doit être capable de :
+    A l'issue du module, l'étudiant doit être capable de :
 -	Décrire les caractéristiques des images et des principaux algorithmes de traitements y relatifs. (M) 
 -	Concevoir une application de traitement d’image. (R)
 -	Implémenter et/ou utiliser les principaux algorithmes de traitement de l'image. (R)
@@ -479,105 +515,105 @@ Particularité d’organisation
 Environ 2h30 de travail personnel par semaine
 ");
             imageNum.Items.Add(trimg);
-            var infogra = new GradeDataGroup("infogra",
+            var infogra = new GradeDataGroup(
                     "Infographie",
                     1.0,
                     imageNum,
                     "Un cours bidon");
             imageNum.Items.Add(infogra);
 
-            infogra.Items.Add(new GradeDataItem("qq1",
+            infogra.Items.Add(new GradeDataItem(
                     "Quick Quiz 1",
                     1.0,
                     infogra,
                     "7 minutes...",
                     6.0));
-            infogra.Items.Add(new GradeDataItem("qq2",
+            infogra.Items.Add(new GradeDataItem(
                     "Quick Quiz 2",
                     1.0,
                     infogra,
                     "7 minutes...",
                     6.0));
-            infogra.Items.Add(new GradeDataItem("qq3",
+            infogra.Items.Add(new GradeDataItem(
                     "Quick Quiz 3",
                     1.0,
                     infogra,
                     "7 minutes...",
                     6.0));
-            infogra.Items.Add(new GradeDataItem("qq4",
+            infogra.Items.Add(new GradeDataItem(
                     "Quick Quiz 4",
                     1.0,
                     infogra,
                     "7 minutes...",
                     6.0));
-            infogra.Items.Add(new GradeDataItem("qq5",
+            infogra.Items.Add(new GradeDataItem(
                     "Quick Quiz 5",
                     1.0,
                     infogra,
                     "7 minutes...",
                     6.0));
-            infogra.Items.Add(new GradeDataItem("qq6",
+            infogra.Items.Add(new GradeDataItem(
                     "Quick Quiz 6",
                     1.0,
                     infogra,
                     "7 minutes...",
                     6.0));
-            infogra.Items.Add(new GradeDataItem("qq7",
+            infogra.Items.Add(new GradeDataItem(
                     "Quick Quiz 7",
                     1.0,
                     infogra,
                     "7 minutes...",
                     6.0));
-            infogra.Items.Add(new GradeDataItem("qq8",
+            infogra.Items.Add(new GradeDataItem(
                     "Quick Quiz 8",
                     1.0,
                     infogra,
                     "7 minutes...",
                     6.0));
-            infogra.Items.Add(new GradeDataItem("qq9",
+            infogra.Items.Add(new GradeDataItem(
                     "Quick Quiz 9",
                     1.0,
                     infogra,
                     "7 minutes...",
                     6.0));
-            infogra.Items.Add(new GradeDataItem("qq10",
+            infogra.Items.Add(new GradeDataItem(
                     "Quick Quiz 10",
                     1.0,
                     infogra,
                     "7 minutes...",
                     6.0));
-            infogra.Items.Add(new GradeDataItem("qq11",
+            infogra.Items.Add(new GradeDataItem(
                     "Quick Quiz 11",
                     1.0,
                     infogra,
                     "7 minutes...",
                     6.0));
-            infogra.Items.Add(new GradeDataItem("qq12",
+            infogra.Items.Add(new GradeDataItem(
                     "Quick Quiz 12",
                     1.0,
                     infogra,
                     "7 minutes...",
                     6.0));
-            infogra.Items.Add(new GradeDataItem("qq13",
+            infogra.Items.Add(new GradeDataItem(
                     "Quick Quiz 13",
                     1.0,
                     infogra,
                     "7 minutes...",
                     6.0));
-            infogra.Items.Add(new GradeDataItem("qq14",
+            infogra.Items.Add(new GradeDataItem(
                     "Quick Quiz 14",
                     1.0,
                     infogra,
                     "7 minutes...",
                     6.0));
-            trimg.Items.Add(new GradeDataItem("test1",
+            trimg.Items.Add(new GradeDataItem(
                     "Test 1",
                     1.0,
                     trimg,
                     "Hae duae provinciae bello quondam piratico catervis mixtae praedonum a Servilio pro consule missae sub iugum factae sunt vectigales. et hae quidem regiones velut in prominenti terrarum lingua positae ob orbe eoo monte Amano disparantur.",
                     6.0));
 
-            trimg.Items.Add(new GradeDataItem("projet",
+            trimg.Items.Add(new GradeDataItem(
                     "Projet",
                     1.0,
                     trimg,
@@ -585,6 +621,7 @@ Environ 2h30 de travail personnel par semaine
                     6.0));
 
             this._rootGroup.Items.Add(imageNum);
+         */
         }
     }
 }

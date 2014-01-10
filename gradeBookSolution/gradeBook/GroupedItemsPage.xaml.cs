@@ -57,7 +57,7 @@ namespace gradeBook
 
             // Accédez à la page de destination souhaitée, puis configurez la nouvelle page
             // en transmettant les informations requises en tant que paramètre de navigation.
-            this.Frame.Navigate(typeof(GroupDetailPage), ((GradeDataGroup)group).UniqueId);
+            this.Frame.Navigate(typeof(GroupDetailPage), ((GradeDataGroup)group).Id);
         }
 
         /// <summary>
@@ -70,7 +70,7 @@ namespace gradeBook
         {
             // Accédez à la page de destination souhaitée, puis configurez la nouvelle page
             // en transmettant les informations requises en tant que paramètre de navigation.
-            var itemId = ((GradeDataCommon)e.ClickedItem).UniqueId;
+            var itemId = ((GradeDataCommon)e.ClickedItem).Id;
 
             GradeDataGroup dataGroup = e.ClickedItem as GradeDataGroup;
             if (dataGroup != null)
