@@ -32,6 +32,8 @@ namespace gradeBook.Data
     {
         private static Uri _baseUri = new Uri("ms-appx:///");
 
+        private static double GRADE_MIN = 4.0;
+
         public GradeDataCommon(String title, Double ponderation, GradeDataGroup group, String description)
         {
             this._title = title;
@@ -100,6 +102,22 @@ namespace gradeBook.Data
         public abstract double Average
         {
             get;
+        }
+
+        [Ignore]
+        public ImageSource Image
+        {
+            get
+            {
+                if (this.Average < GRADE_MIN)
+                {
+                    return new BitmapImage(new Uri(GradeDataCommon._baseUri, "Assets/red.png"));
+                }
+                else
+                {
+                    return new BitmapImage(new Uri(GradeDataCommon._baseUri, "Assets/green.png"));
+                }
+            }
         }
     }
 
