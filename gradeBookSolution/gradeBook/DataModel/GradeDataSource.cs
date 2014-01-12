@@ -109,7 +109,11 @@ namespace gradeBook.Data
         {
             get
             {
-                if (this.Average < GRADE_MIN)
+                if (this.Ponderation == 0.0)
+                {
+                    return new BitmapImage(new Uri(GradeDataCommon._baseUri, "Assets/gray.png"));
+                }
+                else if (this.Average < GRADE_MIN)
                 {
                     return new BitmapImage(new Uri(GradeDataCommon._baseUri, "Assets/red.png"));
                 }
@@ -310,6 +314,7 @@ namespace gradeBook.Data
         private static int ROOT_ID = -1;
         private static int ROOT_GROUP_ID = -404; // Ne devrait jamais être trouvé
         private static Boolean CLEAR_DONE_ONCE = false;
+        private static Boolean STUB_DONE_ONCE = false;
 
         private async void createDatabase()
         {
@@ -347,6 +352,9 @@ namespace gradeBook.Data
 
         private async void createGradeDataStub()
         {
+            if (STUB_DONE_ONCE == false)
+            {
+                STUB_DONE_ONCE = true;
             try
             {
                 SQLiteAsyncConnection conn = new SQLiteAsyncConnection(DATA_BASE_NAME);
@@ -626,6 +634,8 @@ namespace gradeBook.Data
                 Debug.WriteLine("GradeDataItem insert : Failed");
                 Debug.WriteLine("Message : " + e.Message);
             }
+            
+            }
         }
 
         private async void loadGradeData(GradeDataGroup parent)
@@ -677,10 +687,9 @@ namespace gradeBook.Data
         {
             if (CLEAR_DONE_ONCE == false)
             {
-                dropGradeDataTables();
-                createDatabase();
-                
                 CLEAR_DONE_ONCE = true;
+                dropGradeDataTables();
+                createDatabase();              
             }
         }
 
@@ -688,11 +697,11 @@ namespace gradeBook.Data
         {
             // DevTools
             // DevTools : Supression et génération de la base de données
-            //clearCreateDatabase(); // Ne pas executer en meme temps ces deux méthodes.
+            //clearAndCreateDatabase(); // Ne pas executer en meme temps ces deux méthodes.
             //createGradeDataStub();
 
             // Check si la base de données est disponible, si non la créé.
-            //createDatabase();
+            createDatabase();
             loadGradeData(this._rootGroup);
         }
     }

@@ -135,6 +135,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\Gray.png" />
     <Content Include="Assets\green.png" />
     <Content Include="Assets\Logo.png" />
     <Content Include="Assets\red.png" />
