@@ -24,6 +24,8 @@ namespace gradeBook
     /// </summary>
     public sealed partial class GroupDetailPage : gradeBook.Common.LayoutAwarePage
     {
+        private GradeDataGroup group;
+
         public GroupDetailPage()
         {
             this.InitializeComponent();
@@ -44,7 +46,7 @@ namespace gradeBook
             //System.Diagnostics.Debug.WriteLine("nav Param : " + (String)navigationParameter);
             //var group = GradeDataSource.GetGroup((String)navigationParameter);
 
-            GradeDataGroup group = (GradeDataGroup)navigationParameter;
+            group = (GradeDataGroup)navigationParameter;
 
             this.DefaultViewModel["Group"] = group;
             this.DefaultViewModel["Items"] = group.Items;
@@ -76,6 +78,24 @@ namespace gradeBook
             }
 
             
+        }
+
+        void NewGroup(object sender, RoutedEventArgs e)
+        {
+            //GradeDataSource.appendGroup(group);
+            group.databaseAppendNewGroup();
+        }
+
+        void NewItem(object sender, RoutedEventArgs e)
+        {
+            //GradeDataSource.appendItem(group);
+            group.databaseAppendNewItem();
+        }
+
+        void DeleteGroup(object sender, RoutedEventArgs e)
+        {
+            group.databaseDelete();
+
         }
     }
 }

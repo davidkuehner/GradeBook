@@ -428,21 +428,25 @@
         <Setter Property="AutomationProperties.Name" Value="Pause"/>
         <Setter Property="Content" Value="&#xE103;"/>
     </Style>
+    -->
     <Style x:Key="EditAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
         <Setter Property="AutomationProperties.AutomationId" Value="EditAppBarButton"/>
         <Setter Property="AutomationProperties.Name" Value="Edit"/>
         <Setter Property="Content" Value="&#xE104;"/>
     </Style>
+    <!--
     <Style x:Key="SaveAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
         <Setter Property="AutomationProperties.AutomationId" Value="SaveAppBarButton"/>
         <Setter Property="AutomationProperties.Name" Value="Save"/>
         <Setter Property="Content" Value="&#xE105;"/>
     </Style>
+    -->
     <Style x:Key="DeleteAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
         <Setter Property="AutomationProperties.AutomationId" Value="DeleteAppBarButton"/>
         <Setter Property="AutomationProperties.Name" Value="Delete"/>
         <Setter Property="Content" Value="&#xE106;"/>
     </Style>
+    <!--
     <Style x:Key="DiscardAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
         <Setter Property="AutomationProperties.AutomationId" Value="DiscardAppBarButton"/>
         <Setter Property="AutomationProperties.Name" Value="Discard"/>
@@ -458,6 +462,18 @@
         <Setter Property="AutomationProperties.Name" Value="Add"/>
         <Setter Property="Content" Value="&#xE109;"/>
     </Style>
+    -->
+    <Style x:Key="AddItemAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
+        <Setter Property="AutomationProperties.AutomationId" Value="AddAppBarButton"/>
+        <Setter Property="AutomationProperties.Name" Value="Add Item"/>
+        <Setter Property="Content" Value="&#xE109;"/>
+    </Style>
+    <Style x:Key="AddGroupAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
+        <Setter Property="AutomationProperties.AutomationId" Value="AddAppBarButton"/>
+        <Setter Property="AutomationProperties.Name" Value="Add Group"/>
+        <Setter Property="Content" Value="&#xE109;"/>
+    </Style>
+    <!--
     <Style x:Key="NoAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
         <Setter Property="AutomationProperties.AutomationId" Value="NoAppBarButton"/>
         <Setter Property="AutomationProperties.Name" Value="No"/>
@@ -1750,7 +1766,7 @@
       Modèle d'élément de 190 x 130 pixels pour l'affichage d'aperçus de fichiers, comme affiché dans le FileOpenPickerPage
       Inclut une info-bulle sophistiquée pour afficher le texte du titre et de la description
   -->
-    <DataTemplate x:Key="StandardFileWithTooltip190x130ItemTemplate">
+    <!--<DataTemplate x:Key="StandardFileWithTooltip190x130ItemTemplate">
         <Grid>
             <Grid Background="{StaticResource ListViewItemPlaceholderBackgroundThemeBrush}">
                 <Image
@@ -1794,7 +1810,7 @@
                 </ToolTip>
             </ToolTipService.ToolTip>
         </Grid>
-    </DataTemplate>
+    </DataTemplate>-->
 
     <!-- Styles de ScrollViewer -->
 

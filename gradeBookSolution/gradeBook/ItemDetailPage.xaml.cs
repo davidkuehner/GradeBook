@@ -1,7 +1,7 @@
 ﻿using gradeBook.Data;
-
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Windows.Foundation;
@@ -24,6 +24,8 @@ namespace gradeBook
     /// </summary>
     public sealed partial class ItemDetailPage : gradeBook.Common.LayoutAwarePage
     {
+        private GradeDataItem item;
+
         public ItemDetailPage()
         {
             this.InitializeComponent();
@@ -49,7 +51,7 @@ namespace gradeBook
             // TODO: créez un modèle de données approprié pour le domaine posant problème pour remplacer les exemples de données
             //var item = GradeDataSource.GetItem((String)navigationParameter);
 
-            GradeDataItem item = (GradeDataItem)navigationParameter;
+            item = (GradeDataItem)navigationParameter;
 
             this.DefaultViewModel["Group"] = item.Group;
             this.DefaultViewModel["Items"] = item.Group.Items;
@@ -66,6 +68,17 @@ namespace gradeBook
         {
             var selectedItem = (GradeDataCommon)this.flipView.SelectedItem;
             pageState["SelectedItem"] = selectedItem.Id;
+        }
+
+        private void TextBox_LostFocus_1(object sender, RoutedEventArgs e)
+        {
+            //GradeDataSource.updateItem(item);
+            item.databaseUpdate();
+        }
+
+        void DeleteItem(object sender, RoutedEventArgs e)
+        {
+            item.databaseDelete();
         }
     }
 }

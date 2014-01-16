@@ -66,9 +66,18 @@
 
                             <!-- Le contenu est autorisé à se trouver dans autant de colonnes que nécessaire -->
                             <common:RichTextColumns x:Name="richTextColumns" Margin="117,0,117,47">
-                                <RichTextBlock x:Name="richTextBlock" Width="560" Style="{StaticResource ItemRichTextStyle}" IsTextSelectionEnabled="False">
-                                    <Paragraph>
-                                        <Run FontSize="26.667" FontWeight="Light" Text="{Binding Title}"/>
+                                <RichTextBlock x:Name="richTextBlock" Width="560" Style="{StaticResource ItemRichTextStyle}" IsTextSelectionEnabled="True">
+                                    
+                                    
+                                    
+                                    <Paragraph >
+                                        
+                                        <InlineUIContainer >
+                                            <!--<TextBox x:Name="myTitle" LostFocus="TextBox_LostFocus_1" />-->
+                                            <TextBox Text="{Binding Title, Mode=TwoWay}" LostFocus="TextBox_LostFocus_1" />
+                                        </InlineUIContainer>
+
+                                        <!-- <Run FontSize="26.667" FontWeight="Light" Text="{Binding Title}"/>-->
                                         <LineBreak/>
                                         <LineBreak/>
                                         <Run FontSize="26.667" FontWeight="Medium" Text="{Binding Average}"/>
@@ -141,9 +150,12 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="30"/>
             </Grid.ColumnDefinitions>
             <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}"/>
             <TextBlock x:Name="pageTitle" Text="{Binding Title}" Style="{StaticResource PageHeaderTextStyle}" Grid.Column="1" IsHitTestVisible="false"/>
+            <Button x:Name="deleteGroupButton"  Click="DeleteItem"  ClickMode="Release" Style="{StaticResource DeleteAppBarButtonStyle}" Grid.Column="2"/>
         </Grid>
 
         <VisualStateManager.VisualStateGroups>

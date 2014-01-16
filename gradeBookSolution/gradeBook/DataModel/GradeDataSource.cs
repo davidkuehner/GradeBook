@@ -31,6 +31,7 @@ namespace gradeBook.Data
     public abstract class GradeDataCommon : gradeBook.Common.BindableBase
     {
         private static Uri _baseUri = new Uri("ms-appx:///");
+        public static string DATA_BASE_NAME = "gradeBookDataBase";
 
         private static double GRADE_MIN = 4.0;
 
@@ -123,6 +124,10 @@ namespace gradeBook.Data
                 }
             }
         }
+
+        public abstract void databaseDelete();
+
+        public abstract void databaseUpdate();
     }
 
     /// <summary>
@@ -159,6 +164,18 @@ namespace gradeBook.Data
         public override string ToString()
         {
             return base.ToString() + string.Format(" [ Id = {0} Title = {1} Grade = {2} Pond. = {3}  Desc = {4} GroupId = {5} ]", Id, Title, Grade, Ponderation, Description, GroupId);
+        }
+
+        public async override void databaseDelete()
+        {
+            SQLiteAsyncConnection conn = new SQLiteAsyncConnection(DATA_BASE_NAME);
+            await conn.DeleteAsync(this);
+        }
+
+        public async override void databaseUpdate()
+        {
+            SQLiteAsyncConnection conn = new SQLiteAsyncConnection(GradeDataCommon.DATA_BASE_NAME);
+            await conn.UpdateAsync(this);
         }
 
     }
@@ -300,6 +317,43 @@ namespace gradeBook.Data
         {
             return base.ToString() + string.Format(" [ Id = {0} Title = {1} Pond. = {2}  Desc = {3} GroupId = {4} ]", Id, Title, Ponderation, Description, GroupId);
         }
+
+        public async override void databaseDelete()
+        {
+            SQLiteAsyncConnection conn = new SQLiteAsyncConnection(DATA_BASE_NAME);
+            await conn.DeleteAsync(this);
+            foreach (var child in this.Items)
+            {
+                child.databaseDelete();
+            }
+
+        }
+
+        public async override void databaseUpdate()
+        {
+            SQLiteAsyncConnection conn = new SQLiteAsyncConnection(GradeDataCommon.DATA_BASE_NAME);
+            await conn.UpdateAsync(this);
+        }
+
+        public async void databaseAppendNewGroup()
+        {
+            SQLiteAsyncConnection conn = new SQLiteAsyncConnection(GradeDataCommon.DATA_BASE_NAME);
+
+            GradeDataGroup child = new GradeDataGroup("New group", 0, this, "Group description");
+            this.Items.Add(child);
+            await conn.InsertAsync(child);
+            await conn.UpdateAsync(this);
+        }
+
+        public async void databaseAppendNewItem()
+        {
+            SQLiteAsyncConnection conn = new SQLiteAsyncConnection(GradeDataCommon.DATA_BASE_NAME);
+
+            GradeDataItem child = new GradeDataItem("New item", 0, this, "Group description", 4.0);
+            this.Items.Add(child);
+            await conn.InsertAsync(child);
+            await conn.UpdateAsync(this);
+        }
     }
 
     /// <summary>
@@ -310,7 +364,6 @@ namespace gradeBook.Data
     /// </summary>
     public sealed class GradeDataSource
     {
-        private static string DATA_BASE_NAME = "gradeBookDataBase";
         private static int ROOT_ID = -1;
         private static int ROOT_GROUP_ID = -404; // Ne devrait jamais être trouvé
         private static Boolean CLEAR_DONE_ONCE = false;
@@ -320,7 +373,7 @@ namespace gradeBook.Data
         {
             try
             {
-                SQLiteAsyncConnection conn = new SQLiteAsyncConnection(DATA_BASE_NAME);
+                SQLiteAsyncConnection conn = new SQLiteAsyncConnection(GradeDataCommon.DATA_BASE_NAME);
                 Debug.WriteLine("Database creation : Success");
                 await conn.CreateTableAsync<GradeDataItem>();
                 Debug.WriteLine("Table Item creation : Success");
@@ -338,7 +391,7 @@ namespace gradeBook.Data
         {
             try
             {
-                SQLiteAsyncConnection conn = new SQLiteAsyncConnection(DATA_BASE_NAME);
+                SQLiteAsyncConnection conn = new SQLiteAsyncConnection(GradeDataCommon.DATA_BASE_NAME);
                 await conn.DropTableAsync<GradeDataItem>();
                 await conn.DropTableAsync<GradeDataGroup>();
                 Debug.WriteLine("GradeDatabase deletion : Success");
@@ -357,7 +410,7 @@ namespace gradeBook.Data
                 STUB_DONE_ONCE = true;
             try
             {
-                SQLiteAsyncConnection conn = new SQLiteAsyncConnection(DATA_BASE_NAME);
+                SQLiteAsyncConnection conn = new SQLiteAsyncConnection(GradeDataCommon.DATA_BASE_NAME);
 
                 Debug.WriteLine("\nGradeDataStub creation : Beginning\n");
                 
@@ -642,7 +695,7 @@ namespace gradeBook.Data
         {
             try
             {
-                SQLiteAsyncConnection conn = new SQLiteAsyncConnection(DATA_BASE_NAME);
+                SQLiteAsyncConnection conn = new SQLiteAsyncConnection(GradeDataCommon.DATA_BASE_NAME);
                 var queryItems = conn.Table<GradeDataItem>().Where(x => x.GroupId == parent.Id);
                 Debug.WriteLine("GradeDataItem query : Success");
                 var resultItems = await queryItems.ToListAsync();
