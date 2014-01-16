@@ -102,7 +102,7 @@
             <TextBlock x:Name="pageTitle" Text="{Binding Title}" Style="{StaticResource PageHeaderTextStyle}" Grid.Column="1" IsHitTestVisible="false"/>
             <Button x:Name="newGroupButton" Click="NewGroup" ClickMode="Release" Style="{StaticResource AddGroupAppBarButtonStyle}" Grid.Column="2"/>
             <Button x:Name="newItemButton"  Click="NewItem"  ClickMode="Release" Style="{StaticResource AddItemAppBarButtonStyle}" Grid.Column="3"/>
-            <Button x:Name="deleteGroupButton"  Click="DeleteGroup"  ClickMode="Release" Style="{StaticResource DeleteAppBarButtonStyle}" Grid.Column="4"/>
+            <Button x:Name="deleteGroupButton"  Click="DeleteGroup" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" ClickMode="Release" Style="{StaticResource DeleteAppBarButtonStyle}" Grid.Column="4"/>
         </Grid>
 
         <VisualStateManager.VisualStateGroups>
