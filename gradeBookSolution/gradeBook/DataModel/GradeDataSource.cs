@@ -170,14 +170,15 @@ namespace gradeBook.Data
         {
             SQLiteAsyncConnection conn = new SQLiteAsyncConnection(DATA_BASE_NAME);
             await conn.DeleteAsync(this);
+            Group.Items.Remove(this);
         }
 
         public async override void databaseUpdate()
         {
             SQLiteAsyncConnection conn = new SQLiteAsyncConnection(GradeDataCommon.DATA_BASE_NAME);
             await conn.UpdateAsync(this);
+            
         }
-
     }
 
     /// <summary>
@@ -326,7 +327,7 @@ namespace gradeBook.Data
             {
                 child.databaseDelete();
             }
-
+            Group.Items.Remove(this);
         }
 
         public async override void databaseUpdate()
