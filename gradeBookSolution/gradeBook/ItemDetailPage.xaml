@@ -9,6 +9,7 @@
     xmlns:common="using:gradeBook.Common"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:xamltk="using:WinRTXamlToolkit.Controls.Extensions"
     mc:Ignorable="d">
 
     <Page.Resources>
@@ -40,6 +41,35 @@
             d'un élément à la fois, et permettant à l'utilisateur de parcourir tous les éléments d'un groupe
             donné
         -->
+        <Popup x:Name="editPopup" IsOpen="False" Opened="editPopup_Opened">
+            <Grid x:Name="gridChild" Background="Black" Height="Auto" Loaded="gridChild_Loaded">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Margin="10" Grid.Column="0" Grid.Row="0" Text="Edition" TextAlignment="Center" Grid.ColumnSpan="2" Style="{StaticResource PageHeaderTextStyle}" />
+                <TextBlock Margin="10" Grid.Column="0" Grid.Row="1" Text="Title" Style="{StaticResource ResourceKey=SubheaderTextStyle}" />
+                <TextBox Margin="10" Grid.Column="1" Grid.Row="1" Name="InputTitle" MaxLength="30"  xamltk:FieldValidationExtensions.Format="NonEmpty"/>
+                <TextBlock Margin="10" Grid.Column="0" Grid.Row="2" Text="Description" Style="{StaticResource ResourceKey=SubheaderTextStyle}" />
+                <RichEditBox Margin="10" Grid.Column="1" Grid.Row="2" Name="InputDescription"/>
+                <TextBlock Margin="10" Grid.Column="0" Grid.Row="3" Text="Grade" Style="{StaticResource ResourceKey=SubheaderTextStyle}" />
+                <TextBox Margin="10" Grid.Column="1" Grid.Row="3" Name="InputGrade" MaxLength="5" xamltk:FieldValidationExtensions.Format="NonEmptyNumeric"/>
+                <TextBlock Margin="10" Grid.Column="0" Grid.Row="4" Text="Ponderation" Style="{StaticResource ResourceKey=SubheaderTextStyle}" />
+                <TextBox Margin="10" Grid.Column="1" Grid.Row="4" Name="InputPonderation" MaxLength="5" xamltk:FieldValidationExtensions.Format="NonEmptyNumeric"/>
+                <StackPanel Margin="10" Grid.Column="0" Grid.Row="5" Grid.ColumnSpan="2" HorizontalAlignment="Center" Orientation="Horizontal">
+                    <Button x:Name="Cancel"  ClickMode="Release" Style="{StaticResource UndoAppBarButtonStyle}" Click="Cancel_Click" />
+                    <Button x:Name="Save" ClickMode="Release" Style="{StaticResource SaveAppBarButtonStyle}" Click="Save_Click" />
+                </StackPanel>
+            </Grid>
+        </Popup>
         <FlipView
             x:Name="flipView"
             AutomationProperties.AutomationId="ItemsFlipView"
@@ -68,16 +98,8 @@
                             <common:RichTextColumns x:Name="richTextColumns" Margin="117,0,117,47">
                                 <RichTextBlock x:Name="richTextBlock" Width="560" Style="{StaticResource ItemRichTextStyle}" IsTextSelectionEnabled="True">
                                     
-                                    
-                                    
                                     <Paragraph >
-                                        
-                                        <InlineUIContainer >
-                                            <!--<TextBox x:Name="myTitle" LostFocus="TextBox_LostFocus_1" />-->
-                                            <TextBox Text="{Binding Title, Mode=TwoWay}" LostFocus="TextBox_LostFocus_1" />
-                                        </InlineUIContainer>
-
-                                        <!-- <Run FontSize="26.667" FontWeight="Light" Text="{Binding Title}"/>-->
+                                        <Run FontSize="26.667" FontWeight="Light" Text="{Binding Title}"/>
                                         <LineBreak/>
                                         <LineBreak/>
                                         <Run FontSize="26.667" FontWeight="Medium" Text="{Binding Average}"/>
@@ -151,11 +173,13 @@
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="30"/>
             </Grid.ColumnDefinitions>
             <Button x:Name="backButton" Click="GoBack" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" Style="{StaticResource BackButtonStyle}"/>
             <TextBlock x:Name="pageTitle" Text="{Binding Title}" Style="{StaticResource PageHeaderTextStyle}" Grid.Column="1" IsHitTestVisible="false"/>
-            <Button x:Name="deleteGroupButton"  Click="DeleteItem"  ClickMode="Release" Style="{StaticResource DeleteAppBarButtonStyle}" Grid.Column="2"/>
+            <Button x:Name="editGroupButton" ClickMode="Release" Style="{StaticResource EditAppBarButtonStyle}" Grid.Column="2" Click="editGroupButton_Click"/>
+            <Button x:Name="deleteGroupButton"  Click="DeleteItem"  ClickMode="Release" Style="{StaticResource DeleteAppBarButtonStyle}" Grid.Column="3"/>
         </Grid>
 
         <VisualStateManager.VisualStateGroups>
@@ -189,3 +213,4 @@
         </VisualStateManager.VisualStateGroups>
     </Grid>
 </common:LayoutAwarePage>
+

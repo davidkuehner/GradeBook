@@ -80,5 +80,44 @@ namespace gradeBook
         {
             item.databaseDelete();
         }
+
+        private void gridChild_Loaded(object sender, RoutedEventArgs e)
+        {
+            editPopup.Width = Window.Current.Bounds.Width;
+            editPopup.HorizontalOffset = (Window.Current.Bounds.Width - gridChild.ActualWidth) / 2;
+            editPopup.VerticalOffset = (Window.Current.Bounds.Height - gridChild.ActualHeight) / 2;
+        }
+
+        private void Save_Click(object sender, RoutedEventArgs e)
+        {
+            editPopup.IsOpen = false;
+            string strPond = InputPonderation.Text;
+            item.Ponderation = Double.Parse(strPond);
+            string strGrade = InputGrade.Text;
+            item.Grade = Double.Parse(strGrade);
+            item.Title = InputTitle.Text;
+            string strDesc = string.Empty;
+            InputDescription.Document.GetText(Windows.UI.Text.TextGetOptions.AdjustCrlf, out strDesc);
+            item.Description = strDesc;
+            item.databaseUpdate();
+        }
+
+        private void Cancel_Click(object sender, RoutedEventArgs e)
+        {
+            editPopup.IsOpen = false;
+        }
+
+        private void editGroupButton_Click(object sender, RoutedEventArgs e)
+        {
+            editPopup.IsOpen = true;
+        }
+
+        private void editPopup_Opened(object sender, object e)
+        {
+            InputTitle.Text = item.Title;
+            InputDescription.Document.SetText(Windows.UI.Text.TextSetOptions.None, item.Description);
+            InputPonderation.Text = item.Ponderation.ToString();
+            InputGrade.Text = item.Grade.ToString();
+        }
     }
 }
