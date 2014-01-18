@@ -1,7 +1,7 @@
 ﻿using gradeBook.Data;
-
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Windows.Foundation;
@@ -42,10 +42,6 @@ namespace gradeBook
         /// antérieure. Null lors de la première visite de la page.</param>
         protected override void LoadState(Object navigationParameter, Dictionary<String, Object> pageState)
         {
-            // TODO: créez un modèle de données approprié pour le domaine posant problème pour remplacer les exemples de données
-            //System.Diagnostics.Debug.WriteLine("nav Param : " + (String)navigationParameter);
-            //var group = GradeDataSource.GetGroup((String)navigationParameter);
-
             group = (GradeDataGroup)navigationParameter;
 
             this.DefaultViewModel["Group"] = group;
@@ -82,13 +78,11 @@ namespace gradeBook
 
         void NewGroup(object sender, RoutedEventArgs e)
         {
-            //GradeDataSource.appendGroup(group);
             group.databaseAppendNewGroup();
         }
 
         void NewItem(object sender, RoutedEventArgs e)
         {
-            //GradeDataSource.appendItem(group);
             group.databaseAppendNewItem();
         }
 
@@ -96,6 +90,72 @@ namespace gradeBook
         {
             group.databaseDelete();
 
+        }
+
+        private void gridChild_Loaded(object sender, RoutedEventArgs e)
+        {
+            editPopup.Width = Window.Current.Bounds.Width;
+            editPopup.HorizontalOffset = (Window.Current.Bounds.Width - gridChild.ActualWidth) / 2;
+            editPopup.VerticalOffset = (Window.Current.Bounds.Height - gridChild.ActualHeight) / 2;
+        }
+
+        private void editGroupButton_Click(object sender, RoutedEventArgs e)
+        {
+            editPopup.IsOpen = true;
+            itemGridView.IsEnabled = false;
+            deleteGroupButton.IsEnabled = false;
+            newItemButton.IsEnabled = false;
+            newGroupButton.IsEnabled = false;
+            editGroupButton.IsEnabled = false;
+            backButton.IsEnabled = false;
+        }
+
+        private void editPopup_Opened(object sender, object e)
+        {
+            InputTitle.Text = group.Title;
+            InputDescription.Document.SetText(Windows.UI.Text.TextSetOptions.None, group.Description);
+            InputPonderation.Text = group.Ponderation.ToString();
+        }
+
+        private void Save_Click(object sender, RoutedEventArgs e)
+        {
+            editPopup.IsOpen = false;
+            itemGridView.IsEnabled = true;
+            deleteGroupButton.IsEnabled = true;
+            newItemButton.IsEnabled = true;
+            newGroupButton.IsEnabled = true;
+            editGroupButton.IsEnabled = true;
+            backButton.IsEnabled = true;
+
+            try
+            {
+                string strPond = InputPonderation.Text;
+                group.Ponderation = Double.Parse(strPond);
+
+            }
+            catch
+            {
+                group.Ponderation = 0.0;
+            }
+
+            group.Title = InputTitle.Text;
+
+            string strDesc = string.Empty;
+            InputDescription.Document.GetText(Windows.UI.Text.TextGetOptions.AdjustCrlf, out strDesc);
+            group.Description = strDesc;
+
+            group.databaseUpdate();
+        }
+
+        private void Cancel_Click(object sender, RoutedEventArgs e)
+        {
+            editPopup.IsOpen = false;
+            itemGridView.IsEnabled = true;
+            deleteGroupButton.IsEnabled = true;
+            newItemButton.IsEnabled = true;
+            newGroupButton.IsEnabled = true;
+            editGroupButton.IsEnabled = true;
+            backButton.IsEnabled = true;
         }
     }
 }

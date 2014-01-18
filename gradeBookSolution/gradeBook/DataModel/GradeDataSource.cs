@@ -314,6 +314,14 @@ namespace gradeBook.Data
             }
         }
 
+        public double Grade
+        {
+            get 
+            {
+                return this.Average;
+            }
+        }
+
         public override string ToString()
         {
             return base.ToString() + string.Format(" [ Id = {0} Title = {1} Pond. = {2}  Desc = {3} GroupId = {4} ]", Id, Title, Ponderation, Description, GroupId);
@@ -365,7 +373,7 @@ namespace gradeBook.Data
     /// </summary>
     public sealed class GradeDataSource
     {
-        private static int ROOT_ID = -1;
+        public static int ROOT_ID = -1;
         private static int ROOT_GROUP_ID = -404; // Ne devrait jamais être trouvé
         private static Boolean CLEAR_DONE_ONCE = false;
         private static Boolean STUB_DONE_ONCE = false;

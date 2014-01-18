@@ -70,12 +70,6 @@ namespace gradeBook
             pageState["SelectedItem"] = selectedItem.Id;
         }
 
-        private void TextBox_LostFocus_1(object sender, RoutedEventArgs e)
-        {
-            //GradeDataSource.updateItem(item);
-            item.databaseUpdate();
-        }
-
         void DeleteItem(object sender, RoutedEventArgs e)
         {
             item.databaseDelete();
@@ -88,28 +82,13 @@ namespace gradeBook
             editPopup.VerticalOffset = (Window.Current.Bounds.Height - gridChild.ActualHeight) / 2;
         }
 
-        private void Save_Click(object sender, RoutedEventArgs e)
-        {
-            editPopup.IsOpen = false;
-            string strPond = InputPonderation.Text;
-            item.Ponderation = Double.Parse(strPond);
-            string strGrade = InputGrade.Text;
-            item.Grade = Double.Parse(strGrade);
-            item.Title = InputTitle.Text;
-            string strDesc = string.Empty;
-            InputDescription.Document.GetText(Windows.UI.Text.TextGetOptions.AdjustCrlf, out strDesc);
-            item.Description = strDesc;
-            item.databaseUpdate();
-        }
-
-        private void Cancel_Click(object sender, RoutedEventArgs e)
-        {
-            editPopup.IsOpen = false;
-        }
-
-        private void editGroupButton_Click(object sender, RoutedEventArgs e)
+        private void editItemButton_Click(object sender, RoutedEventArgs e)
         {
             editPopup.IsOpen = true;
+            flipView.IsEnabled = false;
+            deleteItemButton.IsEnabled = false;
+            editItemButton.IsEnabled = false;
+            backButton.IsEnabled = false;
         }
 
         private void editPopup_Opened(object sender, object e)
@@ -118,6 +97,46 @@ namespace gradeBook
             InputDescription.Document.SetText(Windows.UI.Text.TextSetOptions.None, item.Description);
             InputPonderation.Text = item.Ponderation.ToString();
             InputGrade.Text = item.Grade.ToString();
+        }
+
+        private void Save_Click(object sender, RoutedEventArgs e)
+        {
+            editPopup.IsOpen = false;
+            flipView.IsEnabled = true;
+            deleteItemButton.IsEnabled = true;
+            editItemButton.IsEnabled = true;
+            backButton.IsEnabled = true;
+
+            
+            try
+            {
+                string strPond = InputPonderation.Text;
+                item.Ponderation = Double.Parse(strPond);
+                string strGrade = InputGrade.Text;
+                item.Grade = Double.Parse(strGrade);
+            }
+            catch
+            {
+                item.Grade = 0.0;
+                item.Ponderation = 0.0;
+            }
+            
+            item.Title = InputTitle.Text;
+
+            string strDesc = string.Empty;
+            InputDescription.Document.GetText(Windows.UI.Text.TextGetOptions.AdjustCrlf, out strDesc);
+            item.Description = strDesc;
+
+            item.databaseUpdate();
+        }
+
+        private void Cancel_Click(object sender, RoutedEventArgs e)
+        {
+            editPopup.IsOpen = false;
+            flipView.IsEnabled = true;
+            deleteItemButton.IsEnabled = true;
+            editItemButton.IsEnabled = true;
+            backButton.IsEnabled = true;
         }
     }
 }

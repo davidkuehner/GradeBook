@@ -9,6 +9,7 @@
     xmlns:common="using:gradeBook.Common"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:xamltk="using:WinRTXamlToolkit.Controls.Extensions"
     mc:Ignorable="d">
 
     <Page.Resources>
@@ -35,6 +36,34 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
+        <Popup x:Name="editPopup" IsOpen="False" Opened="editPopup_Opened">
+            <Grid x:Name="gridChild" Background="Black" Height="600" Width="800" Loaded="gridChild_Loaded">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <TextBlock Margin="10" Grid.Column="0" Grid.Row="0" Text="Edition" TextAlignment="Center" Grid.ColumnSpan="2" Style="{StaticResource PageHeaderTextStyle}" />
+                <TextBlock Margin="10" Grid.Column="0" Grid.Row="1" Text="Title" Style="{StaticResource ResourceKey=SubheaderTextStyle}" />
+                <TextBox Margin="10" Grid.Column="1" Grid.Row="1" x:Name="InputTitle" MaxLength="30"  xamltk:FieldValidationExtensions.Format="NonEmpty" />
+                <TextBlock Margin="10" Grid.Column="0" Grid.Row="2" Text="Description" Style="{StaticResource ResourceKey=SubheaderTextStyle}" />
+                <RichEditBox Margin="10" Grid.Column="1" Grid.Row="2" Name="InputDescription" Height="270"/>
+                <TextBlock Margin="10" Grid.Column="0" Grid.Row="4" Text="Ponderation" Style="{StaticResource ResourceKey=SubheaderTextStyle}" />
+                <TextBox Margin="10" Grid.Column="1" Grid.Row="4" x:Name="InputPonderation" MaxLength="5" xamltk:FieldValidationExtensions.Format="NonEmptyNumeric"/>
+                <StackPanel Margin="10" Grid.Column="0" Grid.Row="5" Grid.ColumnSpan="2" HorizontalAlignment="Center" Orientation="Horizontal">
+                    <Button x:Name="Cancel"  ClickMode="Release" Style="{StaticResource UndoAppBarButtonStyle}" Click="Cancel_Click" />
+                    <Button x:Name="Save" ClickMode="Release" Style="{StaticResource SaveAppBarButtonStyle}" Click="Save_Click" />
+                </StackPanel>
+            </Grid>
+        </Popup>
+
         <!-- Grille de défilement horizontal utilisée dans la plupart des états d'affichage -->
         <GridView
             x:Name="itemGridView"
@@ -52,7 +81,8 @@
 
             <GridView.Header>
                 <StackPanel Width="480" Margin="0,4,14,0">
-                    <TextBlock Text="{Binding Average}" Margin="0,0,18,0" Style="{StaticResource BodyTextStyle}"/>
+                    <TextBlock x:Name="groupAverageRepr" Text="{Binding Average}" Margin="0,0,18,0" Style="{StaticResource AverageGroupTextStyle}"/>
+                    <TextBlock Text=" " Margin="0,0,18,0" Style="{StaticResource BodyTextStyle}"/>
                     <TextBlock Text="{Binding Description}" Margin="0,0,18,0" Style="{StaticResource BodyTextStyle}"/>
                 </StackPanel>
             </GridView.Header>
@@ -81,18 +111,19 @@
 
             <ListView.Header>
                 <StackPanel>
-                    <TextBlock Text="{Binding Average}" Margin="0,0,18,20" Style="{StaticResource SubheaderTextStyle}" MaxHeight="60"/>
+                    <TextBlock Text="{Binding Average}" Margin="0,0,18,20" Style="{StaticResource SubheaderTextStyle}" MaxHeight="60" />
                     <Image Source="{Binding Image}" Margin="10,0,18,0" MaxHeight="160" Stretch="UniformToFill" AutomationProperties.Name="{Binding Title}"/>
                     <TextBlock Margin="10,20,18,30" Text="{Binding Description}" Style="{StaticResource BodyTextStyle}"/>
                 </StackPanel>
             </ListView.Header>
         </ListView>
 
-        <!-- Bouton Précédent et titre de la page -->
+        <!-- Bouton Précédent, titre de la page et actions -->
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="Auto" />
@@ -102,7 +133,8 @@
             <TextBlock x:Name="pageTitle" Text="{Binding Title}" Style="{StaticResource PageHeaderTextStyle}" Grid.Column="1" IsHitTestVisible="false"/>
             <Button x:Name="newGroupButton" Click="NewGroup" ClickMode="Release" Style="{StaticResource AddGroupAppBarButtonStyle}" Grid.Column="2"/>
             <Button x:Name="newItemButton"  Click="NewItem"  ClickMode="Release" Style="{StaticResource AddItemAppBarButtonStyle}" Grid.Column="3"/>
-            <Button x:Name="deleteGroupButton"  Click="DeleteGroup" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" ClickMode="Release" Style="{StaticResource DeleteAppBarButtonStyle}" Grid.Column="4"/>
+            <Button x:Name="editGroupButton"  Click="editGroupButton_Click" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" ClickMode="Release" Style="{StaticResource EditAppBarButtonStyle}" Grid.Column="4"/>
+            <Button x:Name="deleteGroupButton"  Click="DeleteGroup" IsEnabled="{Binding Frame.CanGoBack, ElementName=pageRoot}" ClickMode="Release" Style="{StaticResource DeleteAppBarButtonStyle}" Grid.Column="5"/>
         </Grid>
 
         <VisualStateManager.VisualStateGroups>
