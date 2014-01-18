@@ -88,6 +88,10 @@ namespace gradeBook
 
         void DeleteGroup(object sender, RoutedEventArgs e)
         {
+            deleteGroupButton.IsEnabled = false;
+            editGroupButton.IsEnabled = false;
+            newItemButton.IsEnabled = false;
+            newGroupButton.IsEnabled = false;
             group.databaseDelete();
 
         }

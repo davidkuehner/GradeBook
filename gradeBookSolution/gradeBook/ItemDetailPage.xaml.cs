@@ -72,6 +72,8 @@ namespace gradeBook
 
         void DeleteItem(object sender, RoutedEventArgs e)
         {
+            deleteItemButton.IsEnabled = false;
+            editItemButton.IsEnabled = false;
             item.databaseDelete();
         }
 
