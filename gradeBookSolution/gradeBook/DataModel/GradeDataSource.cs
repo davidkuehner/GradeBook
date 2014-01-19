@@ -14,27 +14,38 @@ using System.Collections.Specialized;
 using SQLite;
 using System.Diagnostics;
 
-// Le modèle de données défini par ce fichier sert d'exemple représentatif d'un modèle fortement typé
-// prenant en charge les notifications lorsque les membres sont ajoutés, supprimés ou modifiés. Les noms
-// de propriétés choisis correspondent aux liaisons de données dans les modèles d'élément standard.
-//
-// Les applications peuvent utiliser ce modèle comme point de départ et le modifier à leur convenance, ou le supprimer complètement et
-// le remplacer par un autre correspondant à leurs besoins.
 
 namespace gradeBook.Data
 {
-    /// <summary>
+    /// <summary> DKU
     /// Classe de base pour <see cref="GradeDataItem"/> et <see cref="GradeDataGroup"/> qui
     /// définit les propriétés communes au deux.
     /// </summary>
     [Windows.Foundation.Metadata.WebHostHidden]
     public abstract class GradeDataCommon : gradeBook.Common.BindableBase
     {
+        /// <summary> DKU
+        /// Base Uri utilisée pour le chemin des images.
+        /// </summary>
         private static Uri _baseUri = new Uri("ms-appx:///");
+
+        /// <summary> DKU
+        /// Nom de la base de donnée pour les objets GradeDataCommon et fils.
+        /// </summary>
         public static string DATA_BASE_NAME = "gradeBookDataBase";
 
+        /// <summary> DKU
+        /// Note suffisante minimale du système de notation.
+        /// </summary>
         private static double GRADE_MIN = 4.0;
 
+        /// <summary> DKU
+        ///  Constructeur principale
+        /// </summary>
+        /// <param name="description">Description textuelle de l'élément</param>
+        /// <param name="group">Group parent de l'élément</param>
+        /// <param name="ponderation">Pondération de la note de l'élément</param>
+        /// <param name="title">Titre de l'élment</param>
         public GradeDataCommon(String title, Double ponderation, GradeDataGroup group, String description)
         {
             this._title = title;
@@ -44,16 +55,22 @@ namespace gradeBook.Data
             this._description = description;
         }
 
-        /// <summary>
+        /// <summary> DKU
         ///  Constructeur par défaut nécessaire pour SqLite
         /// </summary>
         public GradeDataCommon()
         {
         }
 
+        /// <summary> DKU
+        /// Id utilisé pour l'identification des parents et l'indexation dans la base de données
+        /// </summary>
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
 
+        /// <summary> DKU
+        /// Titre de l'élment
+        /// </summary>
         private string _title = string.Empty;
         public string Title
         {
@@ -61,6 +78,9 @@ namespace gradeBook.Data
             set { this.SetProperty(ref this._title, value); }
         }
 
+        /// <summary> DKU
+        /// Pondération de la note de l'élément
+        /// </summary>
         private Double _ponderation = 0.0;
         public Double Ponderation
         {
@@ -68,6 +88,9 @@ namespace gradeBook.Data
             set { this.SetProperty(ref this._ponderation, value); }
         }
 
+        /// <summary> DKU
+        /// Groupe parent du que l'élément fait partie
+        /// </summary>
         private GradeDataGroup _group;
         [Ignore]
         public GradeDataGroup Group
@@ -80,6 +103,9 @@ namespace gradeBook.Data
             }
         }
 
+        /// <summary> DKU
+        /// Id du group parent dont l'élément fait partie
+        /// </summary>
         private int _groupId;
         public int GroupId
         {
@@ -87,7 +113,9 @@ namespace gradeBook.Data
             set { this.SetProperty(ref this._groupId, value); }
         }
 
-
+        /// <summary> DKU
+        /// Description de l'élément courant sous forme de texte
+        /// </summary>
         private string _description = string.Empty;
         public string Description
         {
@@ -95,16 +123,26 @@ namespace gradeBook.Data
             set { this.SetProperty(ref this._description, value); }
         }
 
+        /// <summary> DKU
+        /// Représentation au format string de l'élément
+        /// </summary>
+        /// <returns>Le titre</returns>
         public override string ToString()
         {
             return this.Title;
         }
 
+        /// <summary> DKU
+        /// Moyenne de l'élément courant
+        /// </summary>
         public abstract double Average
         {
             get;
         }
 
+        /// <summary> DKU
+        /// Image associée à l'élément courant.
+        /// </summary>
         [Ignore]
         public ImageSource Image
         {
@@ -125,23 +163,37 @@ namespace gradeBook.Data
             }
         }
 
+        /// <summary> DKU
+        /// Methode abstraite de supression des objets pour la base de donnée
+        /// </summary>
         public abstract void databaseDelete();
 
+        /// <summary> DKU
+        /// Methode abstraite de mise à jour des objets pour la base de donnée
+        /// </summary>
         public abstract void databaseUpdate();
     }
 
-    /// <summary>
-    /// Modèle de données d'élément générique.
+    /// <summary> DKU
+    /// Class représentant une note, c'est un élément atomique (tree leaf)
     /// </summary>
     public class GradeDataItem : GradeDataCommon
     {
+        /// <summary> DKU
+        /// Constructeur principale
+        /// </summary>
+        /// <param name="title">Titre de l'objet (comprendre Item)</param>
+        /// <param name="ponderation">Pondération de la note de l'objet</param>
+        /// <param name="group">Groupe parent auquel appartien l'objet</param>
+        /// <param name="description">Description textuelle de lo'objet</param>
+        /// <param name="grade">Note de l'objet</param>
         public GradeDataItem(String title, Double ponderation, GradeDataGroup group, String description, Double grade)
             : base(title, ponderation, group, description)
         {
             this._grade = grade;
         }
 
-        /// <summary>
+        /// <summary> DKU
         ///  Constructeur par défaut nécessaire pour SqLite
         /// </summary>
         public GradeDataItem()
@@ -149,6 +201,9 @@ namespace gradeBook.Data
         {
         }
 
+        /// <summary> DKU
+        /// Note de l'objet
+        /// </summary>
         private Double _grade = 0.0;
         public Double Grade
         {
@@ -156,16 +211,29 @@ namespace gradeBook.Data
             set { this.SetProperty(ref this._grade, value); }
         }
 
+        /// <summary> DKU
+        /// Moyenne de l'objet, est utilisé pour l'affichage 
+        /// de manière générique entre les Items et Groups.
+        /// C'est pourquoi cet accesseur retourne la note.
+        /// (la moyenne d'une note est la note en question)
+        /// </summary>
         public override double Average
         {
             get { return Math.Round(Grade, 2); }
         }
 
+        /// <summary> DKU
+        /// Reprérentation sous forme de string de l'objet
+        /// </summary>
+        /// <returns>La représentation</returns>
         public override string ToString()
         {
             return base.ToString() + string.Format(" [ Id = {0} Title = {1} Grade = {2} Pond. = {3}  Desc = {4} GroupId = {5} ]", Id, Title, Grade, Ponderation, Description, GroupId);
         }
 
+        /// <summary> DKU
+        /// Supression de l'objet dans la base de donnée
+        /// </summary>
         public async override void databaseDelete()
         {
             SQLiteAsyncConnection conn = new SQLiteAsyncConnection(DATA_BASE_NAME);
@@ -173,6 +241,9 @@ namespace gradeBook.Data
             Group.Items.Remove(this);
         }
 
+        /// <summary> DKU
+        /// Mise à jour de l'objet dans la base de donnée
+        /// </summary>
         public async override void databaseUpdate()
         {
             SQLiteAsyncConnection conn = new SQLiteAsyncConnection(GradeDataCommon.DATA_BASE_NAME);
@@ -181,18 +252,25 @@ namespace gradeBook.Data
         }
     }
 
-    /// <summary>
-    /// Modèle de données de groupe générique.
+    /// <summary> DKU
+    /// Class représentant un goupe de notem, c'est un élément composite (tree internal node)
     /// </summary>
     public class GradeDataGroup : GradeDataCommon
     {
+        /// <summary> DKU
+        /// Constructeur principal
+        /// </summary>
+        /// <param name="title">Titre du groupe</param>
+        /// <param name="ponderation">Pondération du groupe</param>
+        /// <param name="group">Group parent dont le groupe appartient</param>
+        /// <param name="description">Description textuelle du groupe</param>
         public GradeDataGroup(String title, Double ponderation, GradeDataGroup group, String description)
             : base(title, ponderation, group, description)
         {
             Items.CollectionChanged += ItemsCollectionChanged;
         }
 
-        /// <summary>
+        /// <summary> DKU
         ///  Constructeur spécial pour l'élément root ( pas d'appel à base )
         /// </summary>
         public GradeDataGroup(String title, Double ponderation, int id, int groupId, String description)
@@ -205,7 +283,7 @@ namespace gradeBook.Data
             Items.CollectionChanged += ItemsCollectionChanged;
         }
 
-        /// <summary>
+        /// <summary> DKU
         ///  Constructeur par défaut nécessaire pour SqLite
         /// </summary>
         public GradeDataGroup()
@@ -213,6 +291,12 @@ namespace gradeBook.Data
         {
         }
 
+        /// <summary> DKU
+        /// Cette méthode permet gestion des collections d'éléments et gère les notifications.
+        /// Méthode déjà existante dans le modèle.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void ItemsCollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             // Fournit un sous-ensemble de la collection complète d'éléments avec laquelle effectuer une liaison à partir d'un GroupedItemsPage
@@ -277,6 +361,10 @@ namespace gradeBook.Data
             }
         }
 
+        /// <summary> DKU
+        /// Collection des éléments enfants du groupe courant.
+        /// Le type est GradeDataCommon, ceci afin de pouvoir contenir des Items ET des Groups
+        /// </summary>
         private ObservableCollection<GradeDataCommon> _items = new ObservableCollection<GradeDataCommon>();
         [Ignore]
         public ObservableCollection<GradeDataCommon> Items
@@ -284,6 +372,10 @@ namespace gradeBook.Data
             get { return this._items; }
         }
 
+        /// <summary> DKU
+        /// Collection des éléments top. 
+        /// Méthode prédéfinie
+        /// </summary>
         private ObservableCollection<GradeDataCommon> _topItem = new ObservableCollection<GradeDataCommon>();
         [Ignore]
         public ObservableCollection<GradeDataCommon> TopItems
@@ -291,6 +383,9 @@ namespace gradeBook.Data
             get { return this._topItem; }
         }
 
+        /// <summary> DKU
+        /// Calcul de la moyenne de ce groupe.
+        /// </summary>
         public override double Average
         {
             get
@@ -314,6 +409,10 @@ namespace gradeBook.Data
             }
         }
 
+        /// <summary>
+        /// Pour un groupe, la note correspond à la moyenne.
+        /// Grade est présent pour une question d'homogénéité.
+        /// </summary>
         public double Grade
         {
             get 
@@ -322,11 +421,18 @@ namespace gradeBook.Data
             }
         }
 
+        /// <summary>
+        /// Représentation au format string du groupe
+        /// </summary>
+        /// <returns>La représentation</returns>
         public override string ToString()
         {
             return base.ToString() + string.Format(" [ Id = {0} Title = {1} Pond. = {2}  Desc = {3} GroupId = {4} ]", Id, Title, Ponderation, Description, GroupId);
         }
 
+        /// <summary> DKU
+        /// Supression de l'objet dans la base de donnée, cascade.
+        /// </summary>
         public async override void databaseDelete()
         {
             SQLiteAsyncConnection conn = new SQLiteAsyncConnection(DATA_BASE_NAME);
@@ -338,12 +444,18 @@ namespace gradeBook.Data
             Group.Items.Remove(this);
         }
 
+        /// <summary> DKU
+        /// Mise à jour de l'objet dans la base de donnée
+        /// </summary>
         public async override void databaseUpdate()
         {
             SQLiteAsyncConnection conn = new SQLiteAsyncConnection(GradeDataCommon.DATA_BASE_NAME);
             await conn.UpdateAsync(this);
         }
 
+        /// <summary> DKU
+        /// Ajout d'un nouveau group enfant, ajout de l'enfant dans la base de donnée et mise a jour du groupe courant.
+        /// </summary>
         public async void databaseAppendNewGroup()
         {
             SQLiteAsyncConnection conn = new SQLiteAsyncConnection(GradeDataCommon.DATA_BASE_NAME);
@@ -354,6 +466,9 @@ namespace gradeBook.Data
             await conn.UpdateAsync(this);
         }
 
+        /// <summary> DKU
+        /// Ajout d'un nouvel objet enfant, ajout de l'enfant dans la base de donnée et mise a jour du groupe courant.
+        /// </summary>
         public async void databaseAppendNewItem()
         {
             SQLiteAsyncConnection conn = new SQLiteAsyncConnection(GradeDataCommon.DATA_BASE_NAME);
@@ -365,19 +480,57 @@ namespace gradeBook.Data
         }
     }
 
-    /// <summary>
-    /// Crée une collection de groupes et d'éléments dont le contenu est codé en dur.
-    /// 
-    /// GradeDataSource initialise avec les données des espaces réservés plutôt que les données de production
-    /// actives, afin que les exemples de données soient fournis à la fois au moment de la conception et de l'exécution.
+    /// <summary> DKU
+    /// Classe utilitaire permettant de charget l'arbre au démarage.
+    /// Cette classe possède également des méthodes permettant d'injecter 
+    /// des informations d'exemple dans la base de données
     /// </summary>
     public sealed class GradeDataSource
     {
+        /// <summary> DKU
+        /// Id du groupe racine, -1 afin de ne pas être dans 
+        /// le même espace de nombre que les indexes de la base de donnée.
+        /// </summary>
         public static int ROOT_ID = -1;
-        private static int ROOT_GROUP_ID = -404; // Ne devrait jamais être trouvé
+
+        /// <summary> DKU
+        /// Fake id du groupe parent de la racine.
+        /// Ne devrait jamais être trouvé.
+        /// </summary>
+        private static int ROOT_GROUP_ID = -404;
+
+        /// <summary> DKU
+        /// Titre de l'application
+        /// </summary>
+        private static string ROOT_TITLE = "Gradebook";
+
+        /// <summary> DKU
+        /// Description de l'application
+        /// </summary>
+        private static string ROOT_DESCRIPTION = "You can orderd your notes by group.";
+
+        /// <summary> DKU
+        /// Booleans de controle pour la supression et l'ajout de stub dans la base de données.
+        /// </summary>
         private static Boolean CLEAR_DONE_ONCE = false;
         private static Boolean STUB_DONE_ONCE = false;
 
+        /// <summary> DKU
+        /// Instance de la classe courante. 
+        /// Système fourni par l'exemple.
+        /// </summary>
+        private static GradeDataSource _GradeDataSource = new GradeDataSource();
+
+        /// <summary> DKU
+        /// Instance de la racine de l'arbre.
+        /// Il s'agit du seul à ne pas être stoqué dans la base de données
+        /// </summary>
+        private GradeDataGroup _rootGroup = new GradeDataGroup(ROOT_TITLE, 1.0, ROOT_ID, ROOT_GROUP_ID, ROOT_DESCRIPTION);
+
+        /// <summary> DKU
+        /// Création de la base de donées et des tables.
+        /// Permet également de vérifier si les tables sont disponibles.
+        /// </summary>
         private async void createDatabase()
         {
             try
@@ -396,6 +549,9 @@ namespace gradeBook.Data
             }
         }
 
+        /// <summary> DKU
+        /// Supression des tables de la bse de données
+        /// </summary>
         private async void dropGradeDataTables()
         {
             try
@@ -412,6 +568,9 @@ namespace gradeBook.Data
             }
         }
 
+        /// <summary> DKU
+        /// Création de faux contenu (stub) pour la base de données
+        /// </summary>
         private async void createGradeDataStub()
         {
             if (STUB_DONE_ONCE == false)
@@ -700,6 +859,10 @@ namespace gradeBook.Data
             }
         }
 
+        /// <summary> DKU
+        /// Chargement des informations de la base de données
+        /// </summary>
+        /// <param name="parent"></param>
         private async void loadGradeData(GradeDataGroup parent)
         {
             try
@@ -737,14 +900,18 @@ namespace gradeBook.Data
             }
         }
 
-        private static GradeDataSource _GradeDataSource = new GradeDataSource();
-
-        private GradeDataGroup _rootGroup = new GradeDataGroup("Grade Book", 1.0, ROOT_ID, ROOT_GROUP_ID, "You can orderd your notes by group");
+        /// <summary> DKU
+        /// Acesseur pour la racine
+        /// </summary>
         public GradeDataGroup RootGroup
         {
             get { return this._rootGroup; }
         }
 
+        /// <summary> DKU
+        /// Methode permettant le netoyage de la base de données.
+        /// DevTools.
+        /// </summary>
         private void clearAndCreateDatabase()
         {
             if (CLEAR_DONE_ONCE == false)
@@ -755,15 +922,22 @@ namespace gradeBook.Data
             }
         }
 
+        /// <summary> DKU
+        /// Cette métode est appelée lorsque l'application à besoin de charger
+        /// tous les éléments de la based de données en mémoire.
+        /// </summary>
         public GradeDataSource()
         {
-            // DevTools
-            // DevTools : Supression et génération de la base de données
-            //clearAndCreateDatabase(); // Ne pas executer en meme temps ces deux méthodes.
+            // DevTools DKU
+            // Supression et génération de la base de données
+            // Ne pas executer en meme temps ces deux méthodes.
+            // L'exécution est trop rapide par rapport à l'écriture.
+            //clearAndCreateDatabase(); 
             //createGradeDataStub();
 
             // Check si la base de données est disponible, si non la créé.
             createDatabase();
+            // Charge les données
             loadGradeData(this._rootGroup);
         }
     }

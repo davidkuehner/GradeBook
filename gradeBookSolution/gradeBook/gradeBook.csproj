@@ -103,9 +103,6 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="GroupedItemsPage.xaml.cs">
-      <DependentUpon>GroupedItemsPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="GroupDetailPage.xaml.cs">
       <DependentUpon>GroupDetailPage.xaml</DependentUpon>
     </Compile>
@@ -139,9 +136,6 @@
     <Content Include="Assets\SmallLogo.png" />
     <Content Include="Assets\SplashScreen.png" />
     <Content Include="Assets\StoreLogo.png" />
-    <Content Include="Assets\LightGray.png" />
-    <Content Include="Assets\MediumGray.png" />
-    <Content Include="Assets\DarkGray.png" />
     <Content Include="sqlite3.dll" />
   </ItemGroup>
   <ItemGroup>
@@ -150,10 +144,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Page Include="Common\StandardStyles.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="GroupedItemsPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

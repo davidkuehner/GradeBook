@@ -14,24 +14,28 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-// Pour en savoir plus sur le modèle d'élément Page Détail de l'élément, consultez la page http://go.microsoft.com/fwlink/?LinkId=234232
 
 namespace gradeBook
 {
-    /// <summary>
-    /// Page affichant les détails d'un élément au sein d'un groupe, offrant la possibilité de
-    /// consulter les autres éléments qui appartiennent au même groupe.
+    /// <summary> DKU
+    /// Page affichant une vue d'ensemble d'un objet, ainsi que de ses informations.
     /// </summary>
     public sealed partial class ItemDetailPage : gradeBook.Common.LayoutAwarePage
     {
+        /// <summary> DKU
+        /// Objet actuellement chargé dans la vue
+        /// </summary>
         private GradeDataItem item;
 
+        /// <summary> DKU
+        /// Initialisation
+        /// </summary>
         public ItemDetailPage()
         {
             this.InitializeComponent();
         }
 
-        /// <summary>
+        /// <summary> Microsoft
         /// Remplit la page à l'aide du contenu passé lors de la navigation. Tout état enregistré est également
         /// fourni lorsqu'une page est recréée à partir d'une session antérieure.
         /// </summary>
@@ -58,7 +62,7 @@ namespace gradeBook
             this.flipView.SelectedItem = item;
         }
 
-        /// <summary>
+        /// <summary> Microsoft
         /// Conserve l'état associé à cette page en cas de suspension de l'application ou de la
         /// suppression de la page du cache de navigation. Les valeurs doivent être conformes aux
         /// exigences en matière de sérialisation de <see cref="SuspensionManager.SessionState"/>.
@@ -70,6 +74,11 @@ namespace gradeBook
             pageState["SelectedItem"] = selectedItem.Id;
         }
 
+        /// <summary> DKU
+        /// Handler pour la supression de l'objet courant
+        /// </summary>
+        /// <param name="sender">Bouton source</param>
+        /// <param name="e"></param>
         void DeleteItem(object sender, RoutedEventArgs e)
         {
             deleteItemButton.IsEnabled = false;
@@ -77,6 +86,12 @@ namespace gradeBook
             item.databaseDelete();
         }
 
+        /// <summary> DKU
+        /// Lorsque la grille enfant de la popup d'édition est chargée,
+        /// centrage de la popup au milieu de la fenêtre.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void gridChild_Loaded(object sender, RoutedEventArgs e)
         {
             editPopup.Width = Window.Current.Bounds.Width;
@@ -84,6 +99,12 @@ namespace gradeBook
             editPopup.VerticalOffset = (Window.Current.Bounds.Height - gridChild.ActualHeight) / 2;
         }
 
+        /// <summary> DKU
+        /// Handler pour l'édition de l'objet.
+        /// Empèche tout autre action lors de l'édition.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void editItemButton_Click(object sender, RoutedEventArgs e)
         {
             editPopup.IsOpen = true;
@@ -93,6 +114,11 @@ namespace gradeBook
             backButton.IsEnabled = false;
         }
 
+        /// <summary> DKU
+        /// Permet de charger les information dans les champs d'édition.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void editPopup_Opened(object sender, object e)
         {
             InputTitle.Text = item.Title;
@@ -101,6 +127,12 @@ namespace gradeBook
             InputGrade.Text = item.Grade.ToString();
         }
 
+        /// <summary> DKU
+        /// Handler pour le bouton de sauvegarde.
+        /// Sauve les modification et redonne accès au fonctionnalités.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Save_Click(object sender, RoutedEventArgs e)
         {
             editPopup.IsOpen = false;
@@ -132,6 +164,12 @@ namespace gradeBook
             item.databaseUpdate();
         }
 
+        /// <summary> DKU
+        /// Handler pour le bouton cancel.
+        /// Redonne accès aux fonctionnalités
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
             editPopup.IsOpen = false;

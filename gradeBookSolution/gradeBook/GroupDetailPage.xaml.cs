@@ -14,24 +14,29 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
-// Pour en savoir plus sur le modèle d'élément Page Détail du groupe, consultez la page http://go.microsoft.com/fwlink/?LinkId=234229
 
 namespace gradeBook
 {
-    /// <summary>
+    /// <summary> DKU
     /// Page affichant une vue d'ensemble d'un groupe, ainsi qu'un aperçu des éléments
     /// qu'il contient.
     /// </summary>
     public sealed partial class GroupDetailPage : gradeBook.Common.LayoutAwarePage
     {
+        /// <summary> DKU
+        /// Groupe actuellement chargé dans la vue.
+        /// </summary>
         private GradeDataGroup group;
 
+        /// <summary> DKU
+        /// Initialisation
+        /// </summary>
         public GroupDetailPage()
         {
             this.InitializeComponent();
         }
 
-        /// <summary>
+        /// <summary> Microsoft
         /// Remplit la page à l'aide du contenu passé lors de la navigation. Tout état enregistré est également
         /// fourni lorsqu'une page est recréée à partir d'une session antérieure.
         /// </summary>
@@ -44,11 +49,12 @@ namespace gradeBook
         {
             group = (GradeDataGroup)navigationParameter;
 
+            // Adaptation afin de faire correspondre les nouvelles classes DKU
             this.DefaultViewModel["Group"] = group;
             this.DefaultViewModel["Items"] = group.Items;
         }
 
-        /// <summary>
+        /// <summary> Microsoft
         /// Invoqué lorsqu'un utilisateur clique sur un élément.
         /// </summary>
         /// <param name="sender">GridView (ou ListView lorsque l'état d'affichage de l'application est Snapped)
@@ -76,16 +82,31 @@ namespace gradeBook
             
         }
 
+        /// <summary> DKU
+        /// Handler pour la création d'un nouveau group enfant
+        /// </summary>
+        /// <param name="sender">Bouton source</param>
+        /// <param name="e"></param>
         void NewGroup(object sender, RoutedEventArgs e)
         {
             group.databaseAppendNewGroup();
         }
 
+        /// <summary> DKU
+        /// Handler pour la création d'un nouvel objet enfant
+        /// </summary>
+        /// <param name="sender">Bouton source</param>
+        /// <param name="e"></param>
         void NewItem(object sender, RoutedEventArgs e)
         {
             group.databaseAppendNewItem();
         }
 
+        /// <summary> DKU
+        /// Handler pour la supression du groupe courant
+        /// </summary>
+        /// <param name="sender">Bouton source</param>
+        /// <param name="e"></param>
         void DeleteGroup(object sender, RoutedEventArgs e)
         {
             deleteGroupButton.IsEnabled = false;
@@ -96,6 +117,12 @@ namespace gradeBook
 
         }
 
+        /// <summary> DKU
+        /// Lorsque la grille enfant de la popup d'édition est chargée,
+        /// centrage de la popup au milieu de la fenêtre.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void gridChild_Loaded(object sender, RoutedEventArgs e)
         {
             editPopup.Width = Window.Current.Bounds.Width;
@@ -103,6 +130,12 @@ namespace gradeBook
             editPopup.VerticalOffset = (Window.Current.Bounds.Height - gridChild.ActualHeight) / 2;
         }
 
+        /// <summary> DKU
+        /// Handler pour l'édition du groupe.
+        /// Empèche tout autre action lors de l'édition.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void editGroupButton_Click(object sender, RoutedEventArgs e)
         {
             editPopup.IsOpen = true;
@@ -114,6 +147,11 @@ namespace gradeBook
             backButton.IsEnabled = false;
         }
 
+        /// <summary> DKU
+        /// Permet de charger les information dans les champs d'édition.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void editPopup_Opened(object sender, object e)
         {
             InputTitle.Text = group.Title;
@@ -121,6 +159,12 @@ namespace gradeBook
             InputPonderation.Text = group.Ponderation.ToString();
         }
 
+        /// <summary> DKU
+        /// Handler pour le bouton de sauvegarde.
+        /// Sauve les modification et redonne accès au fonctionnalités.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Save_Click(object sender, RoutedEventArgs e)
         {
             editPopup.IsOpen = false;
@@ -151,6 +195,12 @@ namespace gradeBook
             group.databaseUpdate();
         }
 
+        /// <summary> DKU
+        /// Handler pour le bouton cancel.
+        /// Redonne accès aux fonctionnalités
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Cancel_Click(object sender, RoutedEventArgs e)
         {
             editPopup.IsOpen = false;

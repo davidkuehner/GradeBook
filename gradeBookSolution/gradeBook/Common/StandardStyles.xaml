@@ -104,7 +104,7 @@
         </Setter>
     </Style>
 
-
+    <!-- Style pour l'affichage des notes. DKU -->
     <Style x:Key="AverageGroupTextStyle" TargetType="TextBlock" BasedOn="{StaticResource BaselineTextStyle}">
         <Setter Property="FontWeight" Value="SemiBold"/>
         <Setter Property="FontSize" Value="32"/>
@@ -435,6 +435,8 @@
         <Setter Property="Content" Value="&#xE103;"/>
     </Style>
     -->
+
+    <!-- Ajout de la disponibilité des 5 style suivant. DKU -->
     <Style x:Key="EditAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
         <Setter Property="AutomationProperties.AutomationId" Value="EditAppBarButton"/>
         <Setter Property="AutomationProperties.Name" Value="Edit"/>
@@ -458,6 +460,25 @@
         <Setter Property="AutomationProperties.Name" Value="Discard"/>
         <Setter Property="Content" Value="&#xE107;"/>
     </Style>
+
+    <Style x:Key="UndoAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
+        <Setter Property="AutomationProperties.AutomationId" Value="UndoAppBarButton"/>
+        <Setter Property="AutomationProperties.Name" Value="Undo"/>
+        <Setter Property="Content" Value="&#xE10E;"/>
+    </Style>
+
+    <!-- Ajout de 2 boutons spécifique pour le Gradebook. DKU -->
+    <Style x:Key="AddItemAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
+        <Setter Property="AutomationProperties.AutomationId" Value="AddAppBarButton"/>
+        <Setter Property="AutomationProperties.Name" Value="Add Item"/>
+        <Setter Property="Content" Value="&#xE109;"/>
+    </Style>
+    <Style x:Key="AddGroupAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
+        <Setter Property="AutomationProperties.AutomationId" Value="AddAppBarButton"/>
+        <Setter Property="AutomationProperties.Name" Value="Add Group"/>
+        <Setter Property="Content" Value="&#xE109;"/>
+    </Style>
+    
     <!--
     <Style x:Key="RemoveAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
         <Setter Property="AutomationProperties.AutomationId" Value="RemoveAppBarButton"/>
@@ -469,18 +490,6 @@
         <Setter Property="AutomationProperties.Name" Value="Add"/>
         <Setter Property="Content" Value="&#xE109;"/>
     </Style>
-    -->
-    <Style x:Key="AddItemAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
-        <Setter Property="AutomationProperties.AutomationId" Value="AddAppBarButton"/>
-        <Setter Property="AutomationProperties.Name" Value="Add Item"/>
-        <Setter Property="Content" Value="&#xE109;"/>
-    </Style>
-    <Style x:Key="AddGroupAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
-        <Setter Property="AutomationProperties.AutomationId" Value="AddAppBarButton"/>
-        <Setter Property="AutomationProperties.Name" Value="Add Group"/>
-        <Setter Property="Content" Value="&#xE109;"/>
-    </Style>
-    <!--
     <Style x:Key="NoAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
         <Setter Property="AutomationProperties.AutomationId" Value="NoAppBarButton"/>
         <Setter Property="AutomationProperties.Name" Value="No"/>
@@ -501,13 +510,6 @@
         <Setter Property="AutomationProperties.Name" Value="Redo"/>
         <Setter Property="Content" Value="&#xE10D;"/>
     </Style>
-    -->
-    <Style x:Key="UndoAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
-        <Setter Property="AutomationProperties.AutomationId" Value="UndoAppBarButton"/>
-        <Setter Property="AutomationProperties.Name" Value="Undo"/>
-        <Setter Property="Content" Value="&#xE10E;"/>
-    </Style>
-    <!--
     <Style x:Key="HomeAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
         <Setter Property="AutomationProperties.AutomationId" Value="HomeAppBarButton"/>
         <Setter Property="AutomationProperties.Name" Value="Home"/>
@@ -543,9 +545,6 @@
         <Setter Property="AutomationProperties.Name" Value="Settings"/>
         <Setter Property="Content" Value="&#xE115;"/>
     </Style>
-    -->
-
-    <!--
     <Style x:Key="VideoAppBarButtonStyle" TargetType="ButtonBase" BasedOn="{StaticResource AppBarButtonStyle}">
         <Setter Property="AutomationProperties.AutomationId" Value="VideoAppBarButton"/>
         <Setter Property="AutomationProperties.Name" Value="Video"/>
@@ -1674,6 +1673,7 @@
             </Border>
             <StackPanel VerticalAlignment="Bottom" Background="{StaticResource ListViewItemOverlayBackgroundThemeBrush}">
                 <TextBlock Text="{Binding Title}" Foreground="{StaticResource ListViewItemOverlayForegroundThemeBrush}" Style="{StaticResource TitleTextStyle}" Height="60" Margin="15,0,15,0"/>
+                <!-- Ajout de la moyenne pour l'affichage. DKU -->
                 <TextBlock Text="{Binding Average}" Foreground="{StaticResource ListViewItemOverlaySecondaryForegroundThemeBrush}" Style="{StaticResource CaptionTextStyle}" TextWrapping="NoWrap" Margin="15,0,15,10"/>
             </StackPanel>
         </Grid>
@@ -1691,6 +1691,7 @@
             </Border>
             <StackPanel Grid.Column="1" VerticalAlignment="Top" Margin="10,0,0,0">
                 <TextBlock Text="{Binding Title}" Style="{StaticResource TitleTextStyle}" TextWrapping="NoWrap"/>
+                <!-- Ajout de la moyenne pour l'affichage. DKU -->
                 <TextBlock Text="{Binding Average}" Style="{StaticResource CaptionTextStyle}" TextWrapping="NoWrap"/>
                 <TextBlock Text="{Binding Description}" Style="{StaticResource BodyTextStyle}" MaxHeight="60"/>
             </StackPanel>
@@ -1709,6 +1710,7 @@
             </Border>
             <StackPanel Grid.Column="1" VerticalAlignment="Top" Margin="10,0,0,0">
                 <TextBlock Text="{Binding Title}" Style="{StaticResource TitleTextStyle}" TextWrapping="NoWrap"/>
+                <!-- Ajout de la moyenne pour l'affichage. DKU -->
                 <TextBlock Text="{Binding Average}" Style="{StaticResource CaptionTextStyle}" TextWrapping="NoWrap"/>
                 <TextBlock Text="{Binding Description}" Style="{StaticResource BodyTextStyle}" MaxHeight="60"/>
             </StackPanel>
@@ -1730,6 +1732,7 @@
             </Border>
             <StackPanel Grid.Column="1" Margin="10,0,0,0">
                 <TextBlock Text="{Binding Title}" Style="{StaticResource ItemTextStyle}" MaxHeight="40"/>
+                <!-- Ajout de la moyenne pour l'affichage. DKU -->
                 <TextBlock Text="{Binding Average}" Style="{StaticResource CaptionTextStyle}" TextWrapping="NoWrap"/>
             </StackPanel>
         </Grid>
@@ -1747,6 +1750,7 @@
             </Border>
             <StackPanel Grid.Column="1" Margin="10,-10,0,0">
                 <TextBlock Text="{Binding Title}" Style="{StaticResource BodyTextStyle}" TextWrapping="NoWrap"/>
+                <!-- Ajout de la moyenne pour l'affichage. DKU -->
                 <TextBlock Text="{Binding Average}" Style="{StaticResource BodyTextStyle}" Foreground="{StaticResource ApplicationSecondaryForegroundThemeBrush}" TextWrapping="NoWrap"/>
                 <TextBlock Text="{Binding Description}" Style="{StaticResource BodyTextStyle}" Foreground="{StaticResource ApplicationSecondaryForegroundThemeBrush}" TextWrapping="NoWrap"/>
             </StackPanel>
@@ -1765,6 +1769,7 @@
             </Border>
             <StackPanel Grid.Column="1" Margin="10,-10,0,0">
                 <TextBlock Text="{Binding Title}" Style="{StaticResource BodyTextStyle}" TextWrapping="NoWrap"/>
+                <!-- Ajout de la moyenne pour l'affichage. DKU -->
                 <TextBlock Text="{Binding Average}" Style="{StaticResource BodyTextStyle}" Foreground="{StaticResource ApplicationSecondaryForegroundThemeBrush}" TextWrapping="NoWrap"/>
                 <TextBlock Text="{Binding Description}" Style="{StaticResource BodyTextStyle}" Foreground="{StaticResource ApplicationSecondaryForegroundThemeBrush}" TextWrapping="NoWrap"/>
             </StackPanel>

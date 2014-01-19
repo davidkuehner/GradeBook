@@ -17,6 +17,7 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 
+// Fichier fourni par l'exemple, je ne l'ai pas modifié. DKU
 // Pour plus d'informations sur le modèle Application grille, consultez la page http://go.microsoft.com/fwlink/?LinkId=234226
 
 namespace gradeBook
